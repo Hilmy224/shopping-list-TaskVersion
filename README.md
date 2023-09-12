@@ -5,7 +5,7 @@
 Create a new directory for your project. Set up a virtual environment using tools like venv or virtualenv. A virtual environment isolates the dependencies of your project from the system Python environment, ensuring consistency and avoiding conflicts with other projects. This step is important because different projects may require different versions of libraries and packages.
 
 ### 2)Install necessary tools and libraries:
-Create a requirements.txt file that lists all the libraries and packages required for your Django project. You can install these dependencies using the pip package manager by running pip install -r requirements.txt. Make sure to regularly update this file as your project evolves and new dependencies are added.
+Create a 'requirements.txt' file that lists all the libraries and packages required for your Django project. You can install these dependencies using the pip package manager by running pip install -r requirements.txt. Make sure to regularly update this file as your project evolves and new dependencies are added.
 
 ### 3)Run the django-admin command to create a new Django app:
 Open a terminal or command prompt and navigate to your project directory.
