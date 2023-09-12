@@ -1,7 +1,7 @@
 [Link to the Application](https://hilmy-shoppping-list.adaptable.app)
 
-#Setup Django
-##Set up a directory and use a virtual environment:
+## Setup Django
+### Set up a directory and use a virtual environment:
 Create a new directory for your project.
 Set up a virtual environment using tools like venv or virtualenv. A virtual environment isolates the dependencies of your project from the system Python environment, ensuring consistency and avoiding conflicts with other projects. This step is important because different projects may require different versions of libraries and packages.
 Install necessary tools and libraries:
