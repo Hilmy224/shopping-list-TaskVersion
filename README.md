@@ -147,7 +147,10 @@ urlpatterns = [
 
 
 ## Bagan Applikasi Web Berbasis Django
-![Bagan MTV](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/ba0a6842-3bc7-4ecb-af16-cce9e9ef3b9c)
+<p align="center">
+  <img src="https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/ba0a6842-3bc7-4ecb-af16-cce9e9ef3b9c" />
+</p>
+
 HTTP Request:
 + Ketika seorang pengguna melakukan permintaan HTTP ke aplikasi Django, permintaan tersebut diterima oleh server web.Server web meneruskan permintaan ke Django framework.
 
