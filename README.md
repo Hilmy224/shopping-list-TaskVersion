@@ -177,12 +177,12 @@ GitHub.sublime-settings
 
 
 ### 6)Link your project to a GitHub repository:
-Buat repositori baru di GitHub. 
-Inisialisasi repositori Git di direktori proyek Anda menggunakan perintah `git init`
-Tambahkan file proyek Anda ke repositori Git menggunakan `git add .`
-Commit perubahan menggunakan ` commit -m "Initial commit"`
-Setel remote origin ke repositori GitHub Anda menggunakan `git remote add origin <repository-url>`
-Push kode ke repositori remote menggunakan `git push -u origin master.in master`
++Buat repositori baru di GitHub. 
++Inisialisasi repositori Git di direktori proyek Anda menggunakan perintah `git init`
++Tambahkan file proyek Anda ke repositori Git menggunakan `git add .`
++Commit perubahan menggunakan ` commit -m "Initial commit"`
++Setel remote origin ke repositori GitHub Anda menggunakan `git remote add origin <repository-url>`
++Push kode ke repositori remote menggunakan `git push -u origin master.in master`
 
 ### 7)Connect your app to an adaptable account:
 Buka [Adaptable](https://adaptable.io) dan masuk dengan akun GitHub Anda. 
@@ -191,12 +191,12 @@ Pilih branch yang ingin dijadikan sebagai deployment branch.
 Atur sesuai kebutuhan Anda, lalu deploy aplikasi Anda.
 
 diatur sesuai kebutuhanmu lalu deploy aplikasimu. Contoh settingan yang bisa dipakai:
-```
-Pilihlah Python App Template sebagai template deployment, PostgreSQL sebagai tipe basis data yang akan digunakan, versi Python dengan spesifikasi aplikasimu.
-Pada bagian Start Command masukkan perintah python manage.py migrate && gunicorn shopping_list.wsgi.
-Masukkan nama aplikasi yang juga akan menjadi nama domain situs web aplikasimu.
-Centang bagian HTTP Listener on PORT dan klik Deploy App untuk memulai proses deployment aplikasi.
-```
+
++Pilihlah Python App Template sebagai template deployment, PostgreSQL sebagai tipe basis data yang akan digunakan, versi Python dengan spesifikasi aplikasimu.
++Pada bagian Start Command masukkan perintah python manage.py migrate && gunicorn shopping_list.wsgi.
++Masukkan nama aplikasi yang juga akan menjadi nama domain situs web aplikasimu.
++Centang bagian HTTP Listener on PORT dan klik Deploy App untuk memulai proses deployment aplikasi.
+
 
 ### Start making the MVT
 Use the startapp command to create a new Django app within your project: `python manage.py startapp main`
