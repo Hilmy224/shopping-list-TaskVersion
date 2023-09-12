@@ -34,147 +34,7 @@ ALLOWED_HOSTS = ["*"]
 ```
 
 ### 5)Create a .gitignore file:
-Buatlah file `.gitignore` di direktori utama proyek Anda. Tambahkan detail yang diperlukan untuk mengabaikan file dan direktori yang tidak perlu dilacak oleh version control. Biasanya termasuk file seperti file database, file yang dihasilkan, dan informasi sensitif. Contoh file `.gitignore`
-```
-# Django
-*.log
-*.pot
-*.pyc
-__pycache__
-db.sqlite3
-media
-
-# Backup files
-*.bak 
-
-# If you are using PyCharm
-# User-specific stuff
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/**/usage.statistics.xml
-.idea/**/dictionaries
-.idea/**/shelf
-
-# AWS User-specific
-.idea/**/aws.xml
-
-# Generated files
-.idea/**/contentModel.xml
-
-# Sensitive or high-churn files
-.idea/**/dataSources/
-.idea/**/dataSources.ids
-.idea/**/dataSources.local.xml
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-.idea/**/dbnavigator.xml
-
-# Gradle
-.idea/**/gradle.xml
-.idea/**/libraries
-
-# File-based project format
-*.iws
-
-# IntelliJ
-out/
-
-# JIRA plugin
-atlassian-ide-plugin.xml
-
-# Python
-*.py[cod] 
-*$py.class 
-
-# Distribution / packaging 
-.Python build/ 
-develop-eggs/ 
-dist/ 
-downloads/ 
-eggs/ 
-.eggs/ 
-lib/ 
-lib64/ 
-parts/ 
-sdist/ 
-var/ 
-wheels/ 
-*.egg-info/ 
-.installed.cfg 
-*.egg 
-*.manifest 
-*.spec 
-
-# Installer logs 
-pip-log.txt 
-pip-delete-this-directory.txt 
-
-# Unit test / coverage reports 
-htmlcov/ 
-.tox/ 
-.coverage 
-.coverage.* 
-.cache 
-.pytest_cache/ 
-nosetests.xml 
-coverage.xml 
-*.cover 
-.hypothesis/ 
-
-# Jupyter Notebook 
-.ipynb_checkpoints 
-
-# pyenv 
-.python-version 
-
-# celery 
-celerybeat-schedule.* 
-
-# SageMath parsed files 
-*.sage.py 
-
-# Environments 
-.env 
-.venv 
-env/ 
-venv/ 
-ENV/ 
-env.bak/ 
-venv.bak/ 
-
-# mkdocs documentation 
-/site 
-
-# mypy 
-.mypy_cache/ 
-
-# Sublime Text
-*.tmlanguage.cache 
-*.tmPreferences.cache 
-*.stTheme.cache 
-*.sublime-workspace 
-*.sublime-project 
-
-# sftp configuration file 
-sftp-config.json 
-
-# Package control specific files Package 
-Control.last-run 
-Control.ca-list 
-Control.ca-bundle 
-Control.system-ca-bundle 
-GitHub.sublime-settings 
-
-# Visual Studio Code
-.vscode/* 
-!.vscode/settings.json 
-!.vscode/tasks.json 
-!.vscode/launch.json 
-!.vscode/extensions.json 
-.history
-```
-
+Buatlah file `.gitignore` di direktori utama proyek Anda. Tambahkan detail yang diperlukan untuk mengabaikan file dan direktori yang tidak perlu dilacak oleh version control. Biasanya termasuk file seperti file database, file yang dihasilkan, dan informasi sensitif. `.gitignore` bisa dilihat di tutorial.
 
 ### 6)Link your project to a GitHub repository:
 + Buat repositori baru di GitHub. 
@@ -198,8 +58,8 @@ diatur sesuai kebutuhanmu lalu deploy aplikasimu. Contoh settingan yang bisa dip
 + Centang bagian HTTP Listener on PORT dan klik Deploy App untuk memulai proses deployment aplikasi.
 
 
-### Start making the MVT
-Gunakan perintah startapp untuk membuat aplikasi Django baru dalam proyek Anda: `python manage.py startapp main`.(main bisa diganti dengan nama yang anda ingin). 
+## Start making the MVT
+Gunakan perintah startapp untuk membuat aplikasi Django baru dalam proyek Anda: `python manage.py startapp main`.(main bisa diganti dengan nama yang anda ingin tetapi untuk sekarang akan dikatakan main). 
 Ini akan membuat sebuah folder bernama `main`. 
 Perbarui daftar `INSTALLED_APPS` di file `settings.py` untuk mencakup aplikasi yang baru saja dibuat. Contohnya:
 ```
@@ -235,7 +95,52 @@ class Product(models.Model):
 Jalankan perintah migrasi (`python manage.py makemigrations` dan `python manage.py migrate`) untuk membuat atau memperbarui skema database berdasarkan model-model Anda.
 
 ### Connect views and templates:
-Open the `views.py` file inside your app directory.
-Define view functions or classes that handle HTTP requests and render templates.
-Use the Django template system to connect the views with the corresponding HTML templates.
-Create URL patterns in the urls.py file inside your app directory to map URLs to the appropriate view functions or classes.
+Buka file `urls.py` yang di  dalam folder `main`: lalu akan ditambahkan sebuat import dan fungsi yang akan bisa menampilkan secara dinamis:
+```
+from django.shortcuts import render
+
+
+def show_main(request):
+    context = {
+        'exampleVariableA': 'Dictionary',
+        'exampleVariableB': 'Dictionary2'
+    }
+
+    return render(request, "main.html", context)
+```
+Lalu buka folder html anda dan bisa diubah isi bagian yang ingin ditampilkan secara dinamis. Contoh:
+```
+...
+<h5>Name: </h5>
+<p>{{ name }}<p>
+<h5>Class: </h5>
+<p>{{ class }}<p>
+...
+```
+
+### Configurating the URL Routing
+Pertama buka file `urls.py` yang di dalam folder `main` lalu masukkan kode berikut:
+```
+from django.urls import path
+from main.views import show_main
+
+app_name = 'main'
+
+urlpatterns = [
+    path('', show_main, name='show_main'),
+]
+```
+Ini akan mengonfigurasi url ke applikasi `main`.
+
+Lalu buka file `urls.py` yang di **luar** `main` dan masukkan kode berikut agar bisa mengonfigurasi url ke Proyekmu:
+```
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('main/', include('main.urls')),
+]
+```
++ Untuk ngecheck apabila bekerja bisa jalankan proyek Django dengan perintah `python manage.py runserver`. Lalu buka link yang dibalikkan setelah dijalankan command didalam browsermu.
+
+
