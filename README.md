@@ -143,9 +143,10 @@ urlpatterns = [
 
 
 ## Bagan Applikasi Web Berbasis Django
-![Uploading image.png…]()
+![Bagan MTV](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/ba0a6842-3bc7-4ecb-af16-cce9e9ef3b9c)
 
 Jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html.
 Jelaskan mengapa kita menggunakan virtual environment? Apakah kita tetap dapat membuat aplikasi web berbasis Django tanpa menggunakan virtual environment?
 Jelaskan apakah itu MVC, MVT, MVVM dan perbedaan dari ketiganya.
+
 
