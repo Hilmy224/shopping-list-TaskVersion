@@ -27,7 +27,7 @@ Buka file `settings.py` yang terletak di folder proyek Anda.
 Temukan variabel `ALLOWED_HOSTS` dan tambahkan nama host atau alamat IP yang diizinkan untuk mengakses aplikasi Django Anda. 
 Langkah ini penting untuk alasan keamanan, karena membantu mencegah akses yang tidak sah. 
 Anda dapat mengaturnya hingga semua orang bisa dengan melakukan hal berikut:
-```
+```python
 ...
 ALLOWED_HOSTS = ["*"]
 ...
@@ -62,7 +62,7 @@ diatur sesuai kebutuhanmu lalu deploy aplikasimu. Contoh settingan yang bisa dip
 Gunakan perintah startapp untuk membuat aplikasi Django baru dalam proyek Anda: `python manage.py startapp main`.(main bisa diganti dengan nama yang anda ingin tetapi untuk sekarang akan dikatakan main). 
 Ini akan membuat sebuah folder bernama `main`. 
 Perbarui daftar `INSTALLED_APPS` di file `settings.py` untuk mencakup aplikasi yang baru saja dibuat. Contohnya:
-```
+```python
 INSTALLED_APPS = [
     ...,
     'main',
@@ -70,7 +70,7 @@ INSTALLED_APPS = [
 ]
 ```
 Buat folder `templates` di dalam direktori aplikasi dan tambahkan template HTML untuk halaman web Anda. Sesuaikan template HTML agar sesuai dengan kebutuhan Anda. Anda dapat menggunakan Django template tags dan filters untuk merender data secara dinamis di template.Contoh: isi file htmlnya didalam `templates`:
-```
+```html
 <h5>Name: </h5>
 <p>Pak Bepe</p> <!-- Ubahlah sesuai dengan nama kamu -->
 <h5>Class: </h5>
@@ -81,7 +81,7 @@ Buat folder `templates` di dalam direktori aplikasi dan tambahkan template HTML 
 Buka file `models.py` di dalam direktori aplikasi. 
 Tentukan model-model yang diperlukan menggunakan field dan relasi model Django. 
 Model mewakili tabel-tabel database dan relasinya. Contoh model sederhana:
-```
+```python
 from django.db import models
 
 class Product(models.Model):
@@ -94,7 +94,7 @@ Jalankan perintah migrasi (`python manage.py makemigrations` dan `python manage.
 
 ### Connect views and templates:
 Buka file `urls.py` yang di  dalam folder `main`: lalu akan ditambahkan sebuat import dan fungsi yang akan bisa menampilkan secara dinamis:
-```
+```python
 from django.shortcuts import render
 
 
@@ -107,7 +107,7 @@ def show_main(request):
     return render(request, "main.html", context)
 ```
 Lalu buka folder html anda dan bisa diubah isi bagian yang ingin ditampilkan secara dinamis. Contoh:
-```
+```html
 ...
 <h5>Name: </h5>
 <p>{{ name }}<p>
@@ -118,7 +118,7 @@ Lalu buka folder html anda dan bisa diubah isi bagian yang ingin ditampilkan sec
 
 ### Configurating the URL Routing
 Pertama buka file `urls.py` yang di dalam folder `main` lalu masukkan kode berikut:
-```
+```python
 from django.urls import path
 from main.views import show_main
 
@@ -131,7 +131,7 @@ urlpatterns = [
 Ini akan mengonfigurasi url ke applikasi `main`.
 
 Lalu buka file `urls.py` yang di **luar** `main` dan masukkan kode berikut agar bisa mengonfigurasi url ke Proyekmu:
-```
+```python
 from django.urls import path, include
 
 urlpatterns = [
@@ -141,10 +141,11 @@ urlpatterns = [
 ```
 + Untuk ngecheck apabila bekerja bisa jalankan proyek Django dengan perintah `python manage.py runserver`. Lalu buka link yang dibalikkan setelah dijalankan command didalam browsermu.
 
-<br>
 
 ## Bagan Applikasi Web Berbasis Django
-jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html.
+![Uploading image.png…]()
+
+Jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html.
 Jelaskan mengapa kita menggunakan virtual environment? Apakah kita tetap dapat membuat aplikasi web berbasis Django tanpa menggunakan virtual environment?
 Jelaskan apakah itu MVC, MVT, MVVM dan perbedaan dari ketiganya.
 
