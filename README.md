@@ -8,6 +8,7 @@
 ### 1)Set up a directory and use a virtual environment:
 Buatlah direktori baru untuk proyek Anda. Gunakan virtual environment menggunakan tools seperti venv atau virtualenv. Virtual environment akan memisahkan dependensi proyek Anda dari lingkungan Python sistem, memastikan konsistensi dan menghindari konflik dengan proyek lain. Langkah ini penting karena setiap proyek mungkin membutuhkan versi library dan package yang berbeda.
 
+
 ### 2)Install necessary tools and libraries:
 Buatlah file `requirements.txt` yang berisi daftar library dan package yang dibutuhkan untuk proyek Django Anda dan masukkan yang berikut:
 ```
@@ -21,10 +22,12 @@ urllib3
 
 Anda dapat menginstal dependensi ini menggunakan package manager pip dengan menjalankan perintah `pip install -r requirements.txt`. Pastikan untuk secara teratur memperbarui file ini saat proyek Anda berkembang dan dependensi baru ditambahkan.
 
+
 ### 3)Run the django-admin command to create a new Django app:
 Buka terminal atau command prompt dan navigasikan ke direktori proyek Anda. 
 Jalankan perintah berikut untuk membuat aplikasi Django baru: `django-admin startapp appname `
 Gantilah appname dengan nama yang diinginkan untuk aplikasi Anda.
+
 
 ### 4)Set the allowed hosts in the settings.py file:
 Buka file `settings.py` yang terletak di folder proyek Anda. 
@@ -37,8 +40,10 @@ ALLOWED_HOSTS = ["*"]
 ...
 ```
 
+
 ### 5)Create a .gitignore file:
 Buatlah file `.gitignore` di direktori utama proyek Anda. Tambahkan detail yang diperlukan untuk mengabaikan file dan direktori yang tidak perlu dilacak oleh version control. Biasanya termasuk file seperti file database, file yang dihasilkan, dan informasi sensitif. `.gitignore` bisa dilihat di tutorial.
+
 
 ### 6)Link your project to a GitHub repository:
 + Buat repositori baru di GitHub. 
@@ -47,6 +52,7 @@ Buatlah file `.gitignore` di direktori utama proyek Anda. Tambahkan detail yang 
 + Commit perubahan menggunakan ` commit -m "Initial commit"`
 + Setel remote origin ke repositori GitHub Anda menggunakan `git remote add origin <repository-url>`
 + Push kode ke repositori remote menggunakan `git push -u origin master.in master`
+
 
 ### 7)Connect your app to an adaptable account:
 Buka [Adaptable](https://adaptable.io) dan masuk dengan akun GitHub Anda. 
@@ -81,6 +87,7 @@ Buat folder `templates` di dalam direktori aplikasi dan tambahkan template HTML 
 <p>PBP A</p> <!-- Ubahlah sesuai dengan kelas kamu -->
 ```
 
+
 ### Define models for the database:
 Buka file `models.py` di dalam direktori aplikasi. 
 Tentukan model-model yang diperlukan menggunakan field dan relasi model Django. 
@@ -95,6 +102,7 @@ class Product(models.Model):
     description = models.TextField()
 ```
 Jalankan perintah migrasi (`python manage.py makemigrations` dan `python manage.py migrate`) untuk membuat atau memperbarui skema database berdasarkan model-model Anda.
+
 
 ### Connect views and templates:
 Buka file `urls.py` yang di  dalam folder `main`: lalu akan ditambahkan sebuat import dan fungsi yang akan bisa menampilkan secara dinamis:
@@ -119,6 +127,7 @@ Lalu buka folder html anda dan bisa diubah isi bagian yang ingin ditampilkan sec
 <p>{{ class }}<p>
 ...
 ```
+
 
 ### Configurating the URL Routing
 Pertama buka file `urls.py` yang di dalam folder `main` lalu masukkan kode berikut:
@@ -154,9 +163,11 @@ urlpatterns = [
 HTTP Request:
 + Ketika seorang pengguna melakukan permintaan HTTP ke aplikasi Django, permintaan tersebut diterima oleh server web.Server web meneruskan permintaan ke Django framework.
 
+
 URLs (`urls.py`):
 + Django menggunakan berkas urls.py untuk memetakan URL ke tampilan.
 Dalam berkas urls.py, Anda mendefinisikan pola URL menggunakan fungsi path() dari modul django.urls.
+
 
 Views (`views.py`):
 + Tampilan bertanggung jawab untuk memproses permintaan pengguna dan mengembalikan respons.
@@ -164,10 +175,12 @@ Views (`views.py`):
 + Tampilan berinteraksi dengan model untuk mengambil atau memperbarui data dari basis data.
 + Tampilan juga dapat menjalankan logika bisnis dan merender template untuk menghasilkan respons HTML.
 
+
 Model (`models.py`):
 + Model mendefinisikan struktur dan perilaku data dalam aplikasi.
 + Setiap model dalam Django sesuai dengan tabel basis data dan mendefinisikan bidang dan hubungan.
 + Model menyediakan lapisan abstraksi untuk berinteraksi dengan basis data, memungkinkan Anda melakukan operasi CRUD (Create, Read, Update, Delete) pada data.
+
 
 Template (HTML):
 + Template digunakan untuk menghasilkan respons HTML dinamis.
@@ -175,13 +188,16 @@ Template (HTML):
 + Template dirender oleh tampilan, yang meneruskan data dari model ke template.
 + Django menyediakan mesin template yang memproses template dan menggantikan variabel dan tag dengan nilai aktual.
 + Template yang telah dirender dimasukkan dalam respons HTTP yang dikirimkan kembali kepada pengguna.
+
   
 Respons HTTP:
 + Respons yang dihasilkan oleh tampilan, termasuk template yang telah dirender atau jenis respons lainnya, dikirimkan kembali kepada pengguna sebagai respons HTTP.
 + Server web menerima respons tersebut dan mengirimkannya ke browser pengguna.
 
+
 ## Virtual Enviroment 
 Virtual environment akan memisahkan dependensi proyek Anda dari lingkungan Python sistem, memastikan konsistensi dan menghindari konflik dengan proyek lain. Langkah ini sangat penting karena setiap proyek mungkin membutuhkan versi library dan package yang berbeda. Meskipun memungkinkan untuk tidak menggunakan virtual environment, ini bukan pilihan ideal untuk pengembangan proyek Anda.
+
 
 ## MVC, MVT, MVVM
 Model-View-Controller (MVC):
@@ -191,6 +207,7 @@ Model-View-Controller (MVC):
 + Controller menangani masukan pengguna, memperbarui Model, dan berkomunikasi dengan View.
 + Model tidak memahami View atau Controller, perubahan di View atau Controller dikomunikasikan melalui event notifications.
 
+
 Model-View-Template (MVT):
 + Seperti MVC, MVT memisahkan aplikasi menjadi tiga komponen utama: Model, View, dan Template.
 + Model menggambarkan data dan logika bisnis, berinteraksi dengan basis data.
@@ -198,12 +215,14 @@ Model-View-Template (MVT):
 + Template adalah berkas HTML yang mendefinisikan struktur dan tampilan antarmuka pengguna.
 + MVT mengikuti siklus permintaan-respons, pengguna membuat permintaan HTTP, View memproses permintaan, mengambil data dari Model, merender Template, dan mengirimkan respons HTTP kembali kepada pengguna.
 
+
 Model-View-ViewModel (MVVM):
 + MVVM memisahkan aplikasi menjadi tiga komponen utama: Model, View, dan ViewModel.
 + Model menggambarkan data dan logika bisnis, mirip dengan MVC dan MVT.
 + View bertanggung jawab atas antarmuka pengguna, tetapi memiliki peran pasif dan tidak berinteraksi langsung dengan Model.
 + ViewModel bertindak sebagai perantara antara Model dan View. ViewModel mengekspos data dan logika Model ke View, memudahkan kerja.
 MVVM juga mendukung pengikatan data dua arah, di mana perubahan di View secara otomatis disebarkan ke ViewModel dan sebaliknya. 
+
 
 Perbedaan antara MVC, MVT, dan MVVM:
 + Dalam MVC, Controller berperan sebagai mediator antara Model dan View, sedangkan dalam MVT, View menangani permintaan pengguna dan berinteraksi dengan Model.
