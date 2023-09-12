@@ -144,9 +144,40 @@ urlpatterns = [
 
 ## Bagan Applikasi Web Berbasis Django
 ![Bagan MTV](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/ba0a6842-3bc7-4ecb-af16-cce9e9ef3b9c)
+HTTP Request:
++ Ketika seorang pengguna melakukan permintaan HTTP ke aplikasi Django, permintaan tersebut diterima oleh server web.Server web meneruskan permintaan ke Django framework.
 
-Jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html.
-Jelaskan mengapa kita menggunakan virtual environment? Apakah kita tetap dapat membuat aplikasi web berbasis Django tanpa menggunakan virtual environment?
-Jelaskan apakah itu MVC, MVT, MVVM dan perbedaan dari ketiganya.
+URLs (`urls.py`):
++ Django menggunakan berkas urls.py untuk memetakan URL ke tampilan.
+Dalam berkas urls.py, Anda mendefinisikan pola URL menggunakan fungsi path() dari modul django.urls.
+
+Views (`views.py`):
++ Tampilan bertanggung jawab untuk memproses permintaan pengguna dan mengembalikan respons.
++ Dalam Django, tampilan dapat diimplementasikan sebagai fungsi atau tampilan berbasis kelas.
++ Tampilan berinteraksi dengan model untuk mengambil atau memperbarui data dari basis data.
++ Tampilan juga dapat menjalankan logika bisnis dan merender template untuk menghasilkan respons HTML.
+
+Model (`models.py`):
++ Model mendefinisikan struktur dan perilaku data dalam aplikasi.
++ Setiap model dalam Django sesuai dengan tabel basis data dan mendefinisikan bidang dan hubungan.
++ Model menyediakan lapisan abstraksi untuk berinteraksi dengan basis data, memungkinkan Anda melakukan operasi CRUD (Create, Read, Update, Delete) pada data.
+
+Template (HTML):
++ Template digunakan untuk menghasilkan respons HTML dinamis.
++ Template adalah berkas HTML yang dapat mencakup variabel, perulangan, kondisional, dan tag template lainnya.
++ Template dirender oleh tampilan, yang meneruskan data dari model ke template.
++ Django menyediakan mesin template yang memproses template dan menggantikan variabel dan tag dengan nilai aktual.
++ Template yang telah dirender dimasukkan dalam respons HTTP yang dikirimkan kembali kepada pengguna.
+  
+Respons HTTP:
++ Respons yang dihasilkan oleh tampilan, termasuk template yang telah dirender atau jenis respons lainnya, dikirimkan kembali kepada pengguna sebagai respons HTTP.
++ Server web menerima respons tersebut dan mengirimkannya ke browser pengguna.
+
+## Virtual Enviroment 
+Virtual environment akan memisahkan dependensi proyek Anda dari lingkungan Python sistem, memastikan konsistensi dan menghindari konflik dengan proyek lain. Langkah ini sangat penting karena setiap proyek mungkin membutuhkan versi library dan package yang berbeda. Meskipun memungkinkan untuk tidak menggunakan virtual environment, ini bukan pilihan ideal untuk pengembangan proyek Anda.
+
+## MVC, MVT, MVVM
+
+
 
 
