@@ -1,3 +1,5 @@
+![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/211f229c-1df5-4496-b289-316b118656cf)
+
 [Link to the Application](https://corpse-corp.adaptable.app)
 
 ## Setup Django
@@ -177,7 +179,31 @@ Respons HTTP:
 Virtual environment akan memisahkan dependensi proyek Anda dari lingkungan Python sistem, memastikan konsistensi dan menghindari konflik dengan proyek lain. Langkah ini sangat penting karena setiap proyek mungkin membutuhkan versi library dan package yang berbeda. Meskipun memungkinkan untuk tidak menggunakan virtual environment, ini bukan pilihan ideal untuk pengembangan proyek Anda.
 
 ## MVC, MVT, MVVM
+Model-View-Controller (MVC):
++ MVC adalah pola arsitektur yang memisahkan aplikasi menjadi tiga komponen utama: Model, View, dan Controller. 
++ Model menggambarkan data dan logika bisnis aplikasi.
++ View bertanggung jawab untuk menghadirkan antarmuka pengguna.
++ Controller menangani masukan pengguna, memperbarui Model, dan berkomunikasi dengan View.
++ Model tidak memahami View atau Controller, perubahan di View atau Controller dikomunikasikan melalui event notifications.
 
+Model-View-Template (MVT):
++ Seperti MVC, MVT memisahkan aplikasi menjadi tiga komponen utama: Model, View, dan Template.
++ Model menggambarkan data dan logika bisnis, berinteraksi dengan basis data.
++ View menangani permintaan pengguna, memproses data dari Model, dan merender Template.
++ Template adalah berkas HTML yang mendefinisikan struktur dan tampilan antarmuka pengguna.
++ MVT mengikuti siklus permintaan-respons, pengguna membuat permintaan HTTP, View memproses permintaan, mengambil data dari Model, merender Template, dan mengirimkan respons HTTP kembali kepada pengguna.
+
+Model-View-ViewModel (MVVM):
++ MVVM memisahkan aplikasi menjadi tiga komponen utama: Model, View, dan ViewModel.
++ Model menggambarkan data dan logika bisnis, mirip dengan MVC dan MVT.
++ View bertanggung jawab atas antarmuka pengguna, tetapi memiliki peran pasif dan tidak berinteraksi langsung dengan Model.
++ ViewModel bertindak sebagai perantara antara Model dan View. ViewModel mengekspos data dan logika Model ke View, memudahkan kerja.
+MVVM juga mendukung pengikatan data dua arah, di mana perubahan di View secara otomatis disebarkan ke ViewModel dan sebaliknya. 
+
+Perbedaan antara MVC, MVT, dan MVVM:
++ Dalam MVC, Controller berperan sebagai mediator antara Model dan View, sedangkan dalam MVT, View menangani permintaan pengguna dan berinteraksi dengan Model.
++ Dalam MVVM, ViewModel berfungsi sebagai perantara antara Model dan View. MVC dan MVT umumnya digunakan dalam aplikasi web, sementara MVVM sering digunakan dalam kerangka kerja UI modern.
++ MVC dan MVT mengikuti siklus permintaan-respons, sedangkan MVVM lebih berorientasi pada peristiwa dan mendukung pengikatan data dua arah.
 
 
 
