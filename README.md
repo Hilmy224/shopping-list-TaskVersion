@@ -1,4 +1,6 @@
-![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/211f229c-1df5-4496-b289-316b118656cf)
+<p align="center">
+  <img src="https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/211f229c-1df5-4496-b289-316b118656cf" />
+</p>
 
 [Link to the Application](https://corpse-corp.adaptable.app)
 
