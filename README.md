@@ -53,7 +53,7 @@ Atur sesuai kebutuhan Anda, lalu deploy aplikasi Anda.
 diatur sesuai kebutuhanmu lalu deploy aplikasimu. Contoh settingan yang bisa dipakai:
 
 + Pilihlah Python App Template sebagai template deployment, PostgreSQL sebagai tipe basis data yang akan digunakan, versi Python dengan spesifikasi aplikasimu.
-+ Pada bagian Start Command masukkan perintah python manage.py migrate && gunicorn shopping_list.wsgi.
++ Pada bagian Start Command masukkan perintah python manage.py migrate && gunicorn appname.wsgi.
 + Masukkan nama aplikasi yang juga akan menjadi nama domain situs web aplikasimu.
 + Centang bagian HTTP Listener on PORT dan klik Deploy App untuk memulai proses deployment aplikasi.
 
@@ -71,8 +71,6 @@ INSTALLED_APPS = [
 ```
 Buat folder `templates` di dalam direktori aplikasi dan tambahkan template HTML untuk halaman web Anda. Sesuaikan template HTML agar sesuai dengan kebutuhan Anda. Anda dapat menggunakan Django template tags dan filters untuk merender data secara dinamis di template.Contoh: isi file htmlnya didalam `templates`:
 ```
-<h1>Shopping List Page</h1>
-
 <h5>Name: </h5>
 <p>Pak Bepe</p> <!-- Ubahlah sesuai dengan nama kamu -->
 <h5>Class: </h5>
@@ -143,4 +141,10 @@ urlpatterns = [
 ```
 + Untuk ngecheck apabila bekerja bisa jalankan proyek Django dengan perintah `python manage.py runserver`. Lalu buka link yang dibalikkan setelah dijalankan command didalam browsermu.
 
+<br>
+
+## Bagan Applikasi Web Berbasis Django
+jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html.
+Jelaskan mengapa kita menggunakan virtual environment? Apakah kita tetap dapat membuat aplikasi web berbasis Django tanpa menggunakan virtual environment?
+Jelaskan apakah itu MVC, MVT, MVVM dan perbedaan dari ketiganya.
 
