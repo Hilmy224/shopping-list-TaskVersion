@@ -407,9 +407,9 @@ path('xml/', show_xml, name='show_xml'),
 ...
 
 ```
-+JSON<br>
++ JSON<br>
 Pertama ke `main/views.py` dan import beberapa hal dan juga menambahkan fungsi untuk menyimpan hasil query dari seluruh data dan fungsi satu lagi untuk return dalam bentuk JSON: example:
-```
+```python
 def show_json(request):
     data = Item.objects.all()
     
@@ -421,7 +421,7 @@ def show_json(request):
 >Bisa di ubah data menjadi `data = Item.objects.filter(pk=id)` jika ingin mengembalikan data dengan ID pada fungsi show_json dengan return
 
 Lalu bisa diconnect ke path `url_patterns` untuk mengakses hasil dari fungsi, contoh:
-```
+```python
 from main.views import show_main, create_product, show_xml, show_json
 
 //tambahkan ke dalam url_patterns
