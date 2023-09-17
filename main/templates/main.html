@@ -1,12 +1,55 @@
-<h1>Shopping List Page</h1>
+{% extends 'base.html' %}
 
-<h5>Name: </h5>
-<p>{{ name }}</p> <!-- Ubahlah sesuai dengan nama kamu -->
-<h5>Class: </h5>
-<p>{{ class }}</p> <!-- Ubahlah sesuai dengan kelas kamu -->
-<h5>Description</h5>
-<p>{{description}}</p> 
-<h5>Cause Of Death: </h5>
-<p>{{causeOfDeath}}</p>
-<h5>Spirit Status </h5>
-<p>{{spiritStatus}}</p>
+
+{% block content %}
+    <h1>Corspe Corp</h1>
+
+    <h5>Name: </h5>
+    <p>{{ name }}</p> <!-- Ubahlah sesuai dengan nama kamu -->
+    <h5>Class: </h5>
+    <p>{{ class }}</p> <!-- Ubahlah sesuai dengan kelas kamu -->
+    <h5>Species </h5>
+    <p>{{species}}</p> 
+    <h5>Description</h5>
+    <p>{{description}}</p> 
+    <h5>Cause Of Death: </h5>
+    <p>{{causeOfDeath}}</p>
+    <h5>Spirit Status </h5>
+    <p>{{spiritStatus}}</p>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Species</th>
+            <th>Amount</th>
+            <th>CauseOfDeath</th>
+            <th>SpiritStatus</th>
+            <th>Description</th>
+            <th>Date Added</th>
+        </tr>
+    
+        {% comment %} Below is how to show the product data {% endcomment %}
+    
+        {% for item in products %}
+            <tr>
+                <td>{{item.name}}</td>
+                <td>{{item.species}}</td>
+                <td>{{item.amount}}</td>
+                <td>{{item.causeOfDeath}}</td>
+                <td>{{item.spiritStatus}}</td>
+                <td>{{item.description}}</td>
+                <td>{{item.date_added}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    
+    <br />
+    
+    <a href="{% url 'main:create_product' %}">
+        <button>
+            Add New Product
+        </button>
+    </a>
+    
+
+{% endblock content %}
