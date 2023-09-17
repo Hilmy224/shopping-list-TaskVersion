@@ -3,7 +3,7 @@
 </p>
 
 [Link to the Application](https://corpse-corp.adaptable.app)
-#Week 01
+# Week 01
 ## Setup Django
 ### 1)Set up a directory and use a virtual environment:
 Buatlah direktori baru untuk proyek Anda. Gunakan virtual environment menggunakan tools seperti venv atau virtualenv. Virtual environment akan memisahkan dependensi proyek Anda dari lingkungan Python sistem, memastikan konsistensi dan menghindari konflik dengan proyek lain. Langkah ini penting karena setiap proyek mungkin membutuhkan versi library dan package yang berbeda.
@@ -229,7 +229,7 @@ Perbedaan antara MVC, MVT, dan MVVM:
 + Dalam MVVM, ViewModel berfungsi sebagai perantara antara Model dan View. MVC dan MVT umumnya digunakan dalam aplikasi web, sementara MVVM sering digunakan dalam kerangka kerja UI modern.
 + MVC dan MVT mengikuti siklus permintaan-respons, sedangkan MVVM lebih berorientasi pada peristiwa dan mendukung pengikatan data dua arah.
 
-#Week 02
+# Week 02
 * Unrelated Note: Untuk memudahkan akan mengubah path url yang di dalam `urls.py` di dalam applikasi menjadi sebagai berikut agar dapat langsung menampilkan main: 
 
      `path('', include('main.urls')),`
