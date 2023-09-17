@@ -3,7 +3,7 @@
 </p>
 
 [Link to the Application](https://corpse-corp.adaptable.app)
-
+#Week 01
 ## Setup Django
 ### 1)Set up a directory and use a virtual environment:
 Buatlah direktori baru untuk proyek Anda. Gunakan virtual environment menggunakan tools seperti venv atau virtualenv. Virtual environment akan memisahkan dependensi proyek Anda dari lingkungan Python sistem, memastikan konsistensi dan menghindari konflik dengan proyek lain. Langkah ini penting karena setiap proyek mungkin membutuhkan versi library dan package yang berbeda.
@@ -229,5 +229,205 @@ Perbedaan antara MVC, MVT, dan MVVM:
 + Dalam MVVM, ViewModel berfungsi sebagai perantara antara Model dan View. MVC dan MVT umumnya digunakan dalam aplikasi web, sementara MVVM sering digunakan dalam kerangka kerja UI modern.
 + MVC dan MVT mengikuti siklus permintaan-respons, sedangkan MVVM lebih berorientasi pada peristiwa dan mendukung pengikatan data dua arah.
 
+#Week 02
+* Unrelated Note: Untuk memudahkan akan mengubah path url yang di dalam `urls.py` di dalam applikasi menjadi sebagai berikut agar dapat langsung menampilkan main: 
 
+     `path('', include('main.urls')),`
+
+## Implementing Form dan Data Delivery
+
+### 1)Make a Skeleton for Views and Connect them
+Buat sebuah html file baru bernama `base.html` di dalam folder baru bernama `templates` terletak di dalam root folder yang berfungsi sebagai template dasar untuk halaman web lain dlm proyek serta dengan isi:
+```html
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        {% block meta %}
+        {% endblock meta %}
+    </head>
+
+    <body>
+        {% block content %}
+        {% endblock content %}
+    </body>
+</html>
+```
+Buka `settings.py` dalam applikasi dan tambahkan `base.html` agar terdeteksi:
+```python
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'], # Tambahkan kode ini
+        'APP_DIRS': True,
+        ...
+    }
+]
+```
+
+Buka `main.html` didalam `main/templates` dan menggunakan template `base.html`. contohnya:
+```html
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>App list</h1>
+
+    <h5>Name:</h5>
+    <p>{{name}}</p>
+
+    <h5>Class:</h5>
+    <p>{{class}}</p>
+{% endblock content %}
+```
+### 2)Make a form of input of items to the HTML
++ Buat file baru bernama `forms.py` dan isi sesuai dengan model databasemu. contoh:
+```python
+from django.forms import ModelForm
+from main.models import Item
+
+class ProductForm(ModelForm):
+    class Meta:
+        model = Item
+        fields = ["name","species", "amount","causeOfDeath","spiritStatus","description"]
+```
+
++ Buat sebuah fungsi di dalam `main/views.py` yang akan menambahkan hasil dari form, example:
+```python
+def create_product(request):
+    form = ProductForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "create_product.html", context)
+```
+serta ubah fungsi `show_main` sebagai berikut:  
+```python
+def show_main(request):
+    items = Item.objects.all() //Grabs all the objects from the database
+
+    context = {
+        'name': 'Example1`', # Nama kamu
+        'class': 'Example2', # Kelas PBP kamu
+        'products': items,
+    }
+
+    return render(request, "main.html", context)
+```
+
++ Buka `main/urls.py` lalu import  `create_product` dan menambah ke dalam `urlpatterns`
+```
+path('create-product', create_product, name='create_product'),
+```
++ buat sebuah html file agar ada page khusus untuk input data, misalnya `create_product.html ` di dalam `main/templates` dengan isi sebagai berikut:
+```html
+{% extends 'base.html' %} 
+
+{% block content %}
+<h1>Add New Product</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" value="Add Product"/>
+            </td>
+        </tr>
+    </table>
+</form>
+
+{% endblock %}
+```
+
+Untuk nanti menampilkan data (belum keliatan karena masih hanya input) bisa di edit `main/templates/main.html` agar ada tabel yang menampilkan input dari database, example:
+tambahkan kode berikut pada bagian setelah `{% block content %}` :
+```html
+...
+
+        {% comment %} Below is how to show the product data {% endcomment %}
+    
+        {% for item in products %} 
+            <tr>
+                <td>{{item.name}}</td>
+                <td>{{item.species}}</td>
+                <td>{{item.amount}}</td>
+                <td>{{item.causeOfDeath}}</td>
+                <td>{{item.spiritStatus}}</td>
+                <td>{{item.description}}</td>
+                <td>{{item.date_added}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    
+    <br />
+    
+    <a href="{% url 'main:create_product' %}">
+        <button>
+            Add New Product
+        </button>
+    </a>
+    
+
+{% endblock content %}
+```
+
+### 3)Returning Data with XML, XML+ ID, JSON and JSON+ID
++ XML<br>
+Pertama ke `main/views.py` dan import beberapa hal dan juga menambahkan fungsi untuk menyimpan hasil query dari seluruh data dan fungsi satu lagi untuk return dalam bentuk xml: example:
+```python
+from django.http import HttpResponse
+from django.core import serializers
+
+def show_xml(request):
+    data = Item.objects.all()
+    
+def show_xml(request):
+    data = Item.objects.all()
+    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+```
+>Bisa di ubah data menjadi `data = Item.objects.filter(pk=id)` jika ingin mengembalikan data dengan ID pada fungsi show_xml dengan return
+
+Lalu bisa diconnect ke path `url_patterns` untuk mengakses hasil dari fungsi, contoh:
+```
+from main.views import show_main, create_product, show_xml 
+
+//tambahkan ke dalam url_patterns
+...
+path('xml/', show_xml, name='show_xml'),    
+...
+
+```
++JSON<br>
+Pertama ke `main/views.py` dan import beberapa hal dan juga menambahkan fungsi untuk menyimpan hasil query dari seluruh data dan fungsi satu lagi untuk return dalam bentuk JSON: example:
+```
+def show_json(request):
+    data = Item.objects.all()
+    
+def show_json(request):
+    data = Item.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+    
+```
+>Bisa di ubah data menjadi `data = Item.objects.filter(pk=id)` jika ingin mengembalikan data dengan ID pada fungsi show_json dengan return
+
+Lalu bisa diconnect ke path `url_patterns` untuk mengakses hasil dari fungsi, contoh:
+```
+from main.views import show_main, create_product, show_xml, show_json
+
+//tambahkan ke dalam url_patterns
+...
+path('json/', show_json, name='show_json'), 
+...
+
+```
 
