@@ -430,4 +430,7 @@ path('json/', show_json, name='show_json'),
 ...
 
 ```
-
+### Apa perbedaan antara form POST dan form GET dalam Django?
+### Apa perbedaan utama antara XML, JSON, dan HTML dalam konteks pengiriman data?
+### Mengapa JSON sering digunakan dalam pertukaran data antara aplikasi web modern?
+### Menggunakan Postman, membuat screenshot dari hasil akses URL pada Postman, dan menambahkannya ke dalam README.md. ( 5 fungsi views untuk melihat objek yang sudah ditambahkan dalam format HTML, XML, JSON, XML by ID, dan JSON by ID.)
