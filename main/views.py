@@ -9,11 +9,15 @@ from main.models import Item
 # Create your views here.
 def show_main(request):
     items = Item.objects.all()
-
+    tempItemCount=0
+    for ii in items:
+        tempItemCount+=ii.amount
+    
     context = {
         'name': 'Muhammad Hilmy Abdul Aziz',
         'class': 'PBP D',
         'products': items,
+        'itemCount':tempItemCount,
     }
 
     return render(request, "main.html", context)
