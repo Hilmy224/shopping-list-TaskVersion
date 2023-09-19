@@ -3,7 +3,7 @@
 </p>
 
 [Link to the Application](https://corpse-corp.adaptable.app)
-
+# Week 01
 ## Setup Django
 ### 1)Set up a directory and use a virtual environment:
 Buatlah direktori baru untuk proyek Anda. Gunakan virtual environment menggunakan tools seperti venv atau virtualenv. Virtual environment akan memisahkan dependensi proyek Anda dari lingkungan Python sistem, memastikan konsistensi dan menghindari konflik dengan proyek lain. Langkah ini penting karena setiap proyek mungkin membutuhkan versi library dan package yang berbeda.
@@ -229,5 +229,269 @@ Perbedaan antara MVC, MVT, dan MVVM:
 + Dalam MVVM, ViewModel berfungsi sebagai perantara antara Model dan View. MVC dan MVT umumnya digunakan dalam aplikasi web, sementara MVVM sering digunakan dalam kerangka kerja UI modern.
 + MVC dan MVT mengikuti siklus permintaan-respons, sedangkan MVVM lebih berorientasi pada peristiwa dan mendukung pengikatan data dua arah.
 
+# Week 02
+* Unrelated Note: Untuk memudahkan akan mengubah path url yang di dalam `urls.py` di dalam applikasi menjadi sebagai berikut agar dapat langsung menampilkan main: 
 
+     `path('', include('main.urls')),`
+
+## Implementing Form dan Data Delivery
+
+### 1)Make a Skeleton for Views and Connect them
+Buat sebuah html file baru bernama `base.html` di dalam folder baru bernama `templates` terletak di dalam root folder yang berfungsi sebagai template dasar untuk halaman web lain dlm proyek serta dengan isi:
+```html
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        {% block meta %}
+        {% endblock meta %}
+    </head>
+
+    <body>
+        {% block content %}
+        {% endblock content %}
+    </body>
+</html>
+```
+Buka `settings.py` dalam applikasi dan tambahkan `base.html` agar terdeteksi:
+```python
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'], # Tambahkan kode ini
+        'APP_DIRS': True,
+        ...
+    }
+]
+```
+
+Buka `main.html` didalam `main/templates` dan menggunakan template `base.html`. contohnya:
+```html
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>App list</h1>
+
+    <h5>Name:</h5>
+    <p>{{name}}</p>
+
+    <h5>Class:</h5>
+    <p>{{class}}</p>
+{% endblock content %}
+```
+### 2)Make a form of input of items to the HTML
++ Buat file baru bernama `forms.py` dan isi sesuai dengan model databasemu. contoh:
+```python
+from django.forms import ModelForm
+from main.models import Item
+
+class ProductForm(ModelForm):
+    class Meta:
+        model = Item
+        fields = ["name","species", "amount","causeOfDeath","spiritStatus","description"]
+```
+
++ Buat sebuah fungsi di dalam `main/views.py` yang akan menambahkan hasil dari form, example:
+```python
+def create_product(request):
+    form = ProductForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "create_product.html", context)
+```
+serta ubah fungsi `show_main` sebagai berikut:  
+```python
+def show_main(request):
+    items = Item.objects.all() //Grabs all the objects from the database
+
+    context = {
+        'name': 'Example1`', # Nama kamu
+        'class': 'Example2', # Kelas PBP kamu
+        'products': items,
+    }
+
+    return render(request, "main.html", context)
+```
+
++ Buka `main/urls.py` lalu import  `create_product` dan menambah ke dalam `urlpatterns`
+```
+path('create-product', create_product, name='create_product'),
+```
++ buat sebuah html file agar ada page khusus untuk input data, misalnya `create_product.html ` di dalam `main/templates` dengan isi sebagai berikut:
+```html
+{% extends 'base.html' %} 
+
+{% block content %}
+<h1>Add New Product</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" value="Add Product"/>
+            </td>
+        </tr>
+    </table>
+</form>
+
+{% endblock %}
+```
+
+Untuk nanti menampilkan data (belum keliatan karena masih hanya input) bisa di edit `main/templates/main.html` agar ada tabel yang menampilkan input dari database, example:
+tambahkan kode berikut pada bagian setelah `{% block content %}` :
+```html
+...
+
+        {% comment %} Below is how to show the product data {% endcomment %}
+    
+        {% for item in products %} 
+            <tr>
+                <td>{{item.name}}</td>
+                <td>{{item.species}}</td>
+                <td>{{item.amount}}</td>
+                <td>{{item.causeOfDeath}}</td>
+                <td>{{item.spiritStatus}}</td>
+                <td>{{item.description}}</td>
+                <td>{{item.date_added}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    
+    <br />
+    
+    <a href="{% url 'main:create_product' %}">
+        <button>
+            Add New Product
+        </button>
+    </a>
+    
+
+{% endblock content %}
+```
+
+### 3)Returning Data with XML, XML+ ID, JSON and JSON+ID
++ XML<br>
+Pertama ke `main/views.py` dan import beberapa hal dan juga menambahkan fungsi untuk menyimpan hasil query dari seluruh data dan fungsi satu lagi untuk return dalam bentuk xml: example:
+```python
+from django.http import HttpResponse
+from django.core import serializers
+
+def show_xml(request):
+    data = Item.objects.all()
+    
+def show_xml(request):
+    data = Item.objects.all()
+    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+```
+>Bisa di ubah data menjadi `data = Item.objects.filter(pk=id)` jika ingin mengembalikan data dengan ID pada fungsi show_xml dengan return
+
+Lalu bisa diconnect ke path `url_patterns` untuk mengakses hasil dari fungsi, contoh:
+```
+from main.views import show_main, create_product, show_xml 
+
+//tambahkan ke dalam url_patterns
+...
+path('xml/', show_xml, name='show_xml'),    
+...
+
+```
++ JSON<br>
+Pertama ke `main/views.py` dan import beberapa hal dan juga menambahkan fungsi untuk menyimpan hasil query dari seluruh data dan fungsi satu lagi untuk return dalam bentuk JSON: example:
+```python
+def show_json(request):
+    data = Item.objects.all()
+    
+def show_json(request):
+    data = Item.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+    
+```
+>Bisa di ubah data menjadi `data = Item.objects.filter(pk=id)` jika ingin mengembalikan data dengan ID pada fungsi show_json dengan return
+
+Lalu bisa diconnect ke path `url_patterns` untuk mengakses hasil dari fungsi, contoh:
+```python
+from main.views import show_main, create_product, show_xml, show_json
+
+//tambahkan ke dalam url_patterns
+...
+path('json/', show_json, name='show_json'), 
+...
+
+```
+## Perbedaan antara form POST dan form GET dalam Django
+### Form GET:
+
++ Form GET mengirimkan data dalam bentuk string dan menggunakannya untuk membuat URL yang mengandung alamat tempat data harus dikirimkan, serta kunci dan nilai data. 
++ Form GET lebih umum digunakan untuk mengambil data dari server.
+### Form POST:
+
++ Form POST digunakan untuk mengirimkan data yang dapat digunakan untuk mengubah status sistem, misalnya mengubah data dalam database.
++ Form POST mengirimkan data dalam bentuk yang lebih aman dibandingkan dengan Form GET, karena data yang dikirimkan tidak terlihat secara langsung dalam URL.
+
+## Perbedaan utama antara XML, JSON, dan HTML dalam konteks pengiriman data
+Secara umum, XML, JSON, dan HTML memiliki peran mereka masing-masing dalam konteks pengiriman dan penyajian data. XML dan JSON biasanya digunakan untuk pertukaran data antara server dan klien, sementara HTML digunakan untuk struktur dan presentasi data di sisi klien.
+
+### HTML:
+
++ HTML adalah bahasa markup standar untuk membuat halaman web dan aplikasi.
++ HTML digunakan untuk membangun struktur dan tampilan halaman web. Pada HTML tag telah ditentukan sebelumnya dan user tidak memiliki fleksibilitas untuk membuat tag mereka sendiri seperti pada XML dan JSON dalam hal menyimpan data.
++ HTML lebih cocok untuk menampilkan data secara visual kepada user.
+
+### XML:
++ XML adalah bahasa markup yang mendefinisikan serangkaian aturan untuk pengkodean dokumen dalam format yang dapat dibaca oleh mesin dan manusia.
++ XML menggunakan struktur pohon dengan namespace untuk kategori data yang berbeda. Namespace digunakan untuk menghindari konflik antara elemen dan atribut dengan nama yang sama dalam dokumen XML.
++ XML mendukung berbagai jenis data seperti string, integer, boolean, date, image, namespace, dan custom types sesuai kebutuhan
+
+### JSON:
++ JSON adalah format pertukaran data ringan yang mudah dibaca dan ditulis oleh manusia, serta mudah diurai dan dibuat oleh mesin.
++ JSON menggunakan struktur seperti dictionary pada python yaitu dengan pasangan key-value, sehingga JSON lebih sederhana dan memiliki sintaks yang lebih ringkas dibanding XML medium.com.
++ JSON lebih umum digunakan dalam pengembangan aplikasi web dan API karena dukungan yang kuat dari JavaScript.
+
+## Penggunaan JSON dalam pertukaran data antara aplikasi web modern
+JSON mudah dipelajari dan sederhana untuk dibaca dan dipahami. Selain itu, formatnya hanya berupa teks, sehingga dapat dengan mudah dikirim melalui server. Bahkan, aplikasi web lebih memilih JSON daripada XML karena lebih cepat dan lebih mudah untuk diurai. Beberapa hal yang membuat orang lebih memilih menggunakan JSON sebagai berikut:
+
+**Cepat dan Efisien**<br>
+Sintaks JSON cukup sederhana dan dapat menjelaskan dirinya sendiri secara bersamaan. Bahkan aplikasi yang tidak tahu jenis data apa yang diharapkan dapat menginterpretasikan JSON. Sintaksnya cukup mudah dipahami. Data berada dalam pasangan kunci-nilai, di mana titik dua memisahkan nama bidang dan nilainya.
+Selain itu, JSON ringan dan kompak. Oleh karena itu, data yang sama dalam format JSON akan hampir dua pertiga dari XML. 
+
+**Responsif**<br>
+JSON adalah format data yang mudah diurai. Kelebihan dari penguraian JSON di sisi server adalah meningkatkan responsivitas. Dengan demikian, klien dapat mendapatkan respons lebih cepat terhadap pertanyaan mereka. Untuk alasan ini, JSON secara luas diadopsi sebagai format pertukaran data standar. 
+
+***Key-Value Pair Approach***<br>
+*Apporach* kunci/nilai yang digunakan oleh JSON membuatnya menjadi format data yang sederhana. Ini juga menyederhanakan operasi menulis dan membaca.
+
+**Berbagi Data**<br>
+Dari beberapa fungsi JSON, yang paling mencolok adalah berbagi data. Ini digunakan untuk menjalin koneksi antara bahasa front-end dan back-end untuk berbagi data. Pertama, bahasa front-end dikonversi menjadi teks JSON, yang dikenal sebagai serialisasi. Kemudian, teks JSON dikonversi menjadi data pemrograman, yang dikenal sebagai deserialisasi. Proses serialisasi dan deserialisasi cukup cepat dalam JSON, sehingga mempromosikan berbagi data terstruktur.
+
+**Dukungan Browser yang Luas**<br>
+ Beberapa browser yang mendukung JSON adalah Chrome 3 ke atas, Internet Explorer 8 ke atas, Safari 4 ke atas, Firefox 3.5 ke atas, dan Opera 10.5 ke atas.
+ 
+## Postman Screenshot of the URL Access to the 5 Function (HTML, XML, XML ID, JSON, JSON ID)
+
+**HTML**<br>
+![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/89521b0a-9b94-45a3-b54b-1c9b39db9a88)
+
+**XML**<br>
+![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/822f8469-f2b7-4ecc-839e-f237d33b236b)
+
+**XML ID**<br>
+![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/58d0a0a0-dd2e-481c-a9ca-2ea3e0867479)
+
+**JSON**<br>
+![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/2867bbad-0cae-47bb-a816-035afc8dd836)
+
+**JSON ID**<br>
+![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/613636f5-04b6-406c-8509-f01d971fb32a)
 
