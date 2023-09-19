@@ -478,4 +478,20 @@ Dari beberapa fungsi JSON, yang paling mencolok adalah berbagi data. Ini digunak
 **Dukungan Browser yang Luas**<br>
  Beberapa browser yang mendukung JSON adalah Chrome 3 ke atas, Internet Explorer 8 ke atas, Safari 4 ke atas, Firefox 3.5 ke atas, dan Opera 10.5 ke atas.
  
-## Menggunakan Postman, membuat screenshot dari hasil akses URL pada Postman, dan menambahkannya ke dalam README.md. ( 5 fungsi views untuk melihat objek yang sudah ditambahkan dalam format HTML, XML, JSON, XML by ID, dan JSON by ID.)
+## Postman Screenshot of the URL Access to the 5 Function (HTML, XML, XML ID, JSON, JSON ID)
+
+**HTML**<br>
+![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/29854fcd-a7de-4d39-bab6-467ecafa85a5)
+
+**XML**<br>
+![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/822f8469-f2b7-4ecc-839e-f237d33b236b)
+
+**XML ID**<br>
+![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/58d0a0a0-dd2e-481c-a9ca-2ea3e0867479)
+
+**JSON**<br>
+![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/2867bbad-0cae-47bb-a816-035afc8dd836)
+
+**JSON ID**<br>
+![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/613636f5-04b6-406c-8509-f01d971fb32a)
+
