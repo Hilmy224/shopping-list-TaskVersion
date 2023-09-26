@@ -4,7 +4,7 @@
 {% block content %}
     <h1>Corspe Corp</h1>
 
-    <h5>Name: </h5>
+    <h5>Customer: </h5>
     <p>{{ name }}</p> <!-- Ubahlah sesuai dengan nama kamu -->
     <h5>Class: </h5>
     <p>{{ class }}</p> <!-- Ubahlah sesuai dengan kelas kamu -->
@@ -49,9 +49,14 @@
     
     <a href="{% url 'main:create_product' %}">
         <button>
-            Add New Product
+            Add Bodies
         </button>
     </a>
-    
+    <a href="{% url 'main:logout' %}">
+        <button>
+            Exit Covenant
+        </button>
+    </a>
 
+    <h5>Last blood pact session: {{ last_login }}</h5>
 {% endblock content %}

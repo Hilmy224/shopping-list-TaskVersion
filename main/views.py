@@ -6,31 +6,91 @@ from django.urls import reverse
 from main.forms import ProductForm
 from main.models import Item
 
+#Imports for registration and forms for new accounts
+from django.shortcuts import redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages  
+
+#Imports for logins and authentichations for said accounts and also logouts
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout
+
+#Imports  for restricting access 
+from django.contrib.auth.decorators import login_required
+
+#Imports for adding the cookies
+import datetime
+
+
+@login_required(login_url='/login')
+
 # Create your views here.
 def show_main(request):
-    items = Item.objects.all()
+    items = Item.objects.filter(user=request.user)
     tempItemCount=0
     for ii in items:
         tempItemCount+=ii.amount
     
     context = {
-        'name': 'Muhammad Hilmy Abdul Aziz',
+        'name': request.user.username,
         'class': 'PBP D',
         'products': items,
         'itemCount':tempItemCount,
+        'last_login': request.COOKIES['last_login'],
     }
 
     return render(request, "main.html", context)
 
+#Creates a registration form automatically and if submitted a new user will be made
+def register(request):
+    form = UserCreationForm()
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your account has been successfully created!')
+            return redirect('main:login')
+    context = {'form':form}
+    return render(request, 'register.html', context)
+
+
+#Login function
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            response = HttpResponseRedirect(reverse("main:show_main")) 
+            response.set_cookie('last_login', str(datetime.datetime.now()),max_age=3*24*60*60) # Set the cookies max age so you can l
+            return response
+        else:
+            messages.info(request, 'Sorry, incorrect username or password. Please try again.')
+    context = {}
+    return render(request, 'login.html', context)
+
+#Logout functions
+def logout_user(request):
+    logout(request)
+    response = HttpResponseRedirect(reverse('main:login'))
+    response.delete_cookie('last_login')
+    return response
+
+#Modify create prodcut to save data into respective user
 def create_product(request):
     form = ProductForm(request.POST or None)
 
     if form.is_valid() and request.method == "POST":
-        form.save()
+        userItem = form.save(commit=False)
+        userItem.user = request.user
+        userItem.save()
         return HttpResponseRedirect(reverse('main:show_main'))
 
     context = {'form': form}
     return render(request, "create_product.html", context)
+
 
 #Create a variable to store all the data and return them in xml format(using serialiizer)
 def show_xml(request):
