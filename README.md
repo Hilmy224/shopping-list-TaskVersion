@@ -495,3 +495,273 @@ Dari beberapa fungsi JSON, yang paling mencolok adalah berbagi data. Ini digunak
 **JSON ID**<br>
 ![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/613636f5-04b6-406c-8509-f01d971fb32a)
 
+# Tugas 04
+
+## Implementing Registration, Loging and Logout for users
+### 1)Creating a Form for User Registration
+Pertama kita harus masuk ke dalam `main/views.py` lalu tambahkan import dan fungsi berikut yang akan membuat formulir pendaftaran secara otomatis. Jika data pendaftaran dikirimkan, akun user akan terbuat:
+```python
+#Imports
+from django.shortcuts import redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages  
+
+#Functions
+def register(request):
+    form = UserCreationForm()
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your account has been successfully created!')
+            return redirect('main:login')
+    context = {'form':form}
+    return render(request, 'register.html', context)
+```
+
+Lalu kita harus buat sebuah file html untuk `register.html` yang akan ditaro didalam `main/templates` folder. Seperti berikut:
+```html
+{% extends 'base.html' %}
+
+{% block meta %}
+    <title>Register</title>
+{% endblock meta %}
+
+{% block content %}  
+
+<div class = "login">
+    
+    <h1>Register</h1>  
+
+        <form method="POST" >  
+            {% csrf_token %}  
+            <table>  
+                {{ form.as_table }}  
+                <tr>  
+                    <td></td>
+                    <td><input type="submit" name="submit" value="Daftar"/></td>  
+                </tr>  
+            </table>  
+        </form>
+
+    {% if messages %}  
+        <ul>   
+            {% for message in messages %}  
+                <li>{{ message }}</li>  
+                {% endfor %}  
+        </ul>   
+    {% endif %}
+
+</div>  
+
+{% endblock content %}
+```
+
+Dan seperti biasa dengan membuat page baru kita harus connect ke dalam `main/urls.py`
+```python
+#Add the function as import
+from main.views import register
+
+#Inside urlpatterns add the following
+path('login/', login_user, name='login'),
+```
+### 2)Making a login function
+Untuk membuat fungsi kita perlu import beberapa fungsi dari django, dan membuat sebuah fungsi yang mengautentikasi sebuah user dan redirect ke dalam main web page. Contoh:
+```python
+#Nessecary imports
+from django.contrib.auth import authenticate, login
+
+#Example of function
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('main:show_main')
+        else:
+            messages.info(request, 'Sorry, incorrect username or password. Please try again.')
+    context = {}
+    return render(request, 'login.html', context)
+```
+Sebelum selesai dengan login kita harus buat sebuah html untuk menampilkan halaman login dengan membuat `login.html` yang berada didalam folder `main/templates`. Contoh:
+```html
+{% extends 'base.html' %}
+
+{% block meta %}
+    <title>Login</title>
+{% endblock meta %}
+
+{% block content %}
+
+<div class = "login">
+
+    <h1>Login</h1>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>Username: </td>
+                <td><input type="text" name="username" placeholder="Username" class="form-control"></td>
+            </tr>
+                    
+            <tr>
+                <td>Password: </td>
+                <td><input type="password" name="password" placeholder="Password" class="form-control"></td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td><input class="btn login_btn" type="submit" value="Login"></td>
+            </tr>
+        </table>
+    </form>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}     
+        
+    Don't have an account yet? <a href="{% url 'main:register' %}">Register Now</a>
+
+</div>
+
+{% endblock content %}
+```
+Lalu seperti biasa connect ke dalam `main/urls.py`:
+```python
+#Import
+from main.views import login_user
+```
+```python
+#Add in urlpatterns:
+path('login/', login_user, name='login'),
+```
+
+### 3)Making a logout function
+Untuk membuat fungsi logout kita butuh import dari django lagi dan membuat sebuah fungsi untuk logout didalam `main/view.py` sebagai berikut:
+```python
+#Import
+from django.contrib.auth import logout
+
+#Add ogout function
+def logout_user(request):
+    logout(request)
+    return redirect('main:login')
+```
+
+Pemanggilan logout function terjadi ketika logged in user memencet tombol logout didalam `main/templates/main.html`, maka tambahkan kode berikut:
+```html
+<a href="{% url 'main:logout' %}">
+    <button>
+        Logout
+    </button>
+</a>
+```
+
+Lalu connect ke dalam `main/urls.py` dan tambahkan berikut:
+```python
+#Add Import
+from main.views import logout_user
+
+#Add to urlpatterns
+path('logout/', logout_user, name='logout'),
+```
+
+## Restricting Access to only logged in user
+Didalam `main/views.py` import berikut dan pastikan ditaruh sebelum kode yang akan menampilkan halaman yang hanya bisa diakses oleh logged in user contoh:
+```python
+#Necessary Import
+from django.contrib.auth.decorators import login_required
+
+#Add this before the thing you want to show to logged in user
+@login_required(login_url='/login')
+def somerandomfunction(request):
+...
+
+```
+
+## Making use of Cookies
+Kita bisa mengguankan data dari cookies untuk misalnya membuat sebuah data yang menampilkan fitur last login.
+Pertama kita masukan `import datetime` kedalam `main/views.py` dan pada fungsi `login_user` kita akan ubah menjadi sebagai berikut:
+```python
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        
+        #Bagian yang diganti
+        if user is not None:   
+            login(request, user)
+            response = HttpResponseRedirect(reverse("main:show_main")) 
+            response.set_cookie('last_login', str(datetime.datetime.now()))
+            return response
+        else:
+            messages.info(request, 'Sorry, incorrect username or password. Please try again.')
+    context = {}
+    return render(request, 'login.html', context)
+```
+
+Lalu pada fungsi `show_main` tambahkan `'last_login': request.COOKIES['last_login'],` di dalam context.Serta edit fungsi `logout_user` menjadai sebagai berikut:
+```python
+def logout_user(request):
+    logout(request)
+    response = HttpResponseRedirect(reverse('main:login'))
+    response.delete_cookie('last_login')
+    return response
+```
+Terakhir untuk menampilkan datanya kita bisa edit `main/templates/main.html` dan tambahkan `{{ last_login }}`. Contoh:
+```html
+<h5>Sesi terakhir login: {{ last_login }}</h5>
+```
+
+## Making each User have have their own product
+Untuk melakukan ini kita harus masuk ke dalam `main/models.py` dan edit `models.py` dengan menambahkan sebuah import dan tambah data user. Contoh:
+```python
+#Add this Import
+from django.contrib.auth.models import User
+
+#Add inside Item
+class Item(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    ...
+```
+Selanjutnya, kita harus edit fungsi  `show_main` dan `create_product` agar sebagai berikut:
+```python
+#Display main web page
+def show_main(request):
+    #Change this
+    items = Item.objects.filter(user=request.user)
+    ...
+    
+    context = {
+        #Change this
+        'name': request.user.username,
+        ...
+    }
+    
+#Modify create prodcut to save data into respective user
+def create_product(request):
+    form = ProductForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        userItem = form.save(commit=False)
+        userItem.user = request.user
+        userItem.save()
+        return HttpResponseRedirect(reverse('main:show_main'))'
+        ...
+```
+
+> Make sure to always run `python manage.py makemigrations` and `python manage.py migrate` to save changes to the model
+
+## Apa itu Django UserCreationForm, dan jelaskan apa kelebihan dan kekurangannya?
+## perbedaan antara autentikasi dan otorisasi dalam konteks Django, dan mengapa keduanya penting?
+## Apa itu cookies dalam konteks aplikasi web, dan bagaimana Django menggunakan cookies untuk mengelola data sesi pengguna?
+## penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai?
