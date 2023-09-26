@@ -496,7 +496,6 @@ Dari beberapa fungsi JSON, yang paling mencolok adalah berbagi data. Ini digunak
 ![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/613636f5-04b6-406c-8509-f01d971fb32a)
 
 # Tugas 04
-
 ## Implementing Registration, Loging and Logout for users
 ### 1)Creating a Form for User Registration
 Pertama kita harus masuk ke dalam `main/views.py` lalu tambahkan import dan fungsi berikut yang akan membuat formulir pendaftaran secara otomatis. Jika data pendaftaran dikirimkan, akun user akan terbuat:
@@ -566,7 +565,7 @@ from main.views import register
 #Inside urlpatterns add the following
 path('login/', login_user, name='login'),
 ```
-<br>
+
 ### 2)Making a login function
 Untuk membuat fungsi kita perlu import beberapa fungsi dari django, dan membuat sebuah fungsi yang mengautentikasi sebuah user dan redirect ke dalam main web page. Contoh:
 ```python
@@ -644,7 +643,7 @@ from main.views import login_user
 #Add in urlpatterns:
 path('login/', login_user, name='login'),
 ```
-<br>
+
 ### 3)Making a logout function
 Untuk membuat fungsi logout kita butuh import dari django lagi dan membuat sebuah fungsi untuk logout didalam `main/view.py` sebagai berikut:
 ```python
@@ -674,7 +673,7 @@ from main.views import logout_user
 #Add to urlpatterns
 path('logout/', logout_user, name='logout'),
 ```
-<br>
+
 ## Restricting Access to only logged in user
 Didalam `main/views.py` import berikut dan pastikan ditaruh sebelum kode yang akan menampilkan halaman yang hanya bisa diakses oleh logged in user contoh:
 ```python
@@ -687,7 +686,7 @@ def somerandomfunction(request):
 ...
 
 ```
-<br>
+
 ## Making use of Cookies
 Kita bisa mengguankan data dari cookies untuk misalnya membuat sebuah data yang menampilkan fitur last login.
 Pertama kita masukan `import datetime` kedalam `main/views.py` dan pada fungsi `login_user` kita akan ubah menjadi sebagai berikut:
@@ -722,7 +721,7 @@ Terakhir untuk menampilkan datanya kita bisa edit `main/templates/main.html` dan
 ```html
 <h5>Sesi terakhir login: {{ last_login }}</h5>
 ```
-<br>
+
 ## Making each User have have their own product
 Untuk melakukan ini kita harus masuk ke dalam `main/models.py` dan edit `models.py` dengan menambahkan sebuah import dan tambah data user. Contoh:
 ```python
@@ -761,7 +760,7 @@ def create_product(request):
 ```
 
 > Make sure to always run `python manage.py makemigrations` and `python manage.py migrate` to save changes to the model
-<br>
+
 ##  Django UserCreationForm Pros and Cons
 Django `UserCreationForm` adalah sebuah _class_ form yang termasuk kedalam sistem autentikasi Django yang digunakan untuk mebuat sebuah user account baru.<br>
 **Pros:**
@@ -772,17 +771,17 @@ Django `UserCreationForm` adalah sebuah _class_ form yang termasuk kedalam siste
 **Cons**
 + UserCreationForm Django didesain untuk menangani kasus penggunaan yang paling umum untuk membuat akun pengguna baru. Jika Anda perlu mengumpulkan informasi tambahan dari pengguna (seperti alamat email, nama lengkap, dan lain-lain), Anda perlu memperluas UserCreationForm atau membuat formulir sendiri. Hal ini dapat menambah kerumitan pada kode Anda.
 + UserCreationForm Django merupakan bagian dari sistem autentikasi Django, yang berarti bergantung pada bagian lain dari sistem tersebut. Jika Anda ingin menggunakan sistem autentikasi yang berbeda, atau jika Anda ingin menyesuaikan sistem autentikasi Django dengan cara yang tidak didukung oleh UserCreationForm, Anda mungkin akan mengalami kesulitan.
-<br>
+
 ## Diffrence between authentication and authorization in Django
 +  Authentication di Django adalah proses verifikasi identitas `user`. Ini mengonfirmasi bahwa `user` adalah orang yang mereka klaim. Hal ini biasanya dilakukan melalui nama pengguna dan kata sandi, tetapi sistem otentikasi Django fleksibel dan memungkinkan metode lain juga
 + Authorization di Django, menentukan apa yang boleh dilakukan oleh `authenticated user`.Ini melibatkan izin yang mengindikasikan operasi apa (seperti melihat, menambah, mengubah, atau menghapus) yang dapat dilakukan pengguna pada objek tertentu
-<br>
+
 ## Web Cookies and How Django uses them
 **Cookies** dalam sebuah aplikasi web merupakan data kecil yang disimpan oleh browser anda dan dikirim dengan setiap `HTTP Request`. **Cookies** digunakan untuk mengingat informasi tentang user seperti preferences, authentication status, dan session-related data
 
 Django menggunakan cookie untuk mengelola sesi data pengguna. *Session framework* memungkinkan Anda untuk menyimpan dan mengambil data sewenang-wenang pada basis per-pengunjung situs. Secara default, Django menggunakan **session cookies** untuk menyimpan data sesi, yang berarti bahwa data aktual disimpan di sisi server, sedangkan cookie sisi klien berisi ID sesi untuk identifikasi.
 >To set and get cookies in Django, you can use the set_cookie and get methods on the request and response objects
-<br>
+
 ## Cookies Safe?
 Cookie pada umumnya aman digunakan dalam pengembangan web, namun memiliki potensi risiko keamanan dan privasi. Berikut ini beberapa hal yang perlu diperhatikan saat menggunakan cookie resources:
 
