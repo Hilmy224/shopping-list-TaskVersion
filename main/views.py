@@ -111,3 +111,26 @@ def show_json(request):
     data = Item.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
+#Adding Amount to the Data(Does'nt really allign with my theme)
+def add_amount(request,id):
+    if request.method == "POST":
+        tempItem=Item.objects.get(pk=id)
+        tempItem.amount+=1
+        tempItem.save()
+    return HttpResponseRedirect(reverse('main:show_main'))
+
+def lessen_ammount(request,id):
+    if request.method == "POST":
+        tempItem=Item.objects.get(pk=id)
+        if tempItem.amount>0:
+            tempItem.amount-=1
+            tempItem.save()
+        if tempItem.amount==0:
+            tempItem.delete()
+    return HttpResponseRedirect(reverse('main:show_main'))
+
+def delete_product(request,id):
+    if request.method == "POST":
+        tempItem=Item.objects.get(pk=id)
+        tempItem.delete()
+    return HttpResponseRedirect(reverse('main:show_main'))

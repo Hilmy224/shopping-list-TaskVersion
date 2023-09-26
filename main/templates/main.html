@@ -2,20 +2,12 @@
 
 
 {% block content %}
-    <h1>Corspe Corp</h1>
+    <h1>Corpse Corp</h1>
 
     <h5>Customer: </h5>
     <p>{{ name }}</p> <!-- Ubahlah sesuai dengan nama kamu -->
     <h5>Class: </h5>
     <p>{{ class }}</p> <!-- Ubahlah sesuai dengan kelas kamu -->
-    <h5>Species </h5>
-    <p>{{species}}</p> 
-    <h5>Description</h5>
-    <p>{{description}}</p> 
-    <h5>Cause Of Death: </h5>
-    <p>{{causeOfDeath}}</p>
-    <h5>Spirit Status </h5>
-    <p>{{spiritStatus}}</p>
 
 
     <tb> {{ itemCount }} Bodies Grafted </tb>
@@ -24,6 +16,8 @@
             <th>Name</th>
             <th>Species</th>
             <th>Amount</th>
+            <th></th>
+            <th></th>
             <th>CauseOfDeath</th>
             <th>SpiritStatus</th>
             <th>Description</th>
@@ -34,14 +28,34 @@
     
         {% for item in products %}
             <tr>
-                <td>{{item.name}}</td>
-                <td>{{item.species}}</td>
-                <td>{{item.amount}}</td>
-                <td>{{item.causeOfDeath}}</td>
-                <td>{{item.spiritStatus}}</td>
-                <td>{{item.description}}</td>
-                <td>{{item.date_added}}</td>
+                <td style="text-align: center;">{{item.name}}</td>
+                <td style="text-align: center;">{{item.species}}</td>
+                <td style="text-align: center;">{{item.amount}}</td>
+                <td>
+                    <form method="post" action="{% url 'main:add_amount' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit">⨹</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" action="{% url 'main:lessen_amount' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit">⨺</button>
+                    </form>
+                </td>
+                <td style="text-align: center;">{{item.causeOfDeath}}</td>
+                <td style="text-align: center;">{{item.spiritStatus}}</td>
+                <td style="text-align: center;">{{item.description}}</td>
+                <td style="text-align: center;">{{item.date_added}}</td>
+                <td>
+                    <form method="post" action="{% url 'main:delete_product' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit">⨻</button>
+                    </form>
+                </td>
+
             </tr>
+
         {% endfor %}
     </table>
     
