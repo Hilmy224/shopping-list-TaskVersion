@@ -566,6 +566,7 @@ from main.views import register
 #Inside urlpatterns add the following
 path('login/', login_user, name='login'),
 ```
+<br>
 ### 2)Making a login function
 Untuk membuat fungsi kita perlu import beberapa fungsi dari django, dan membuat sebuah fungsi yang mengautentikasi sebuah user dan redirect ke dalam main web page. Contoh:
 ```python
@@ -643,7 +644,7 @@ from main.views import login_user
 #Add in urlpatterns:
 path('login/', login_user, name='login'),
 ```
-
+<br>
 ### 3)Making a logout function
 Untuk membuat fungsi logout kita butuh import dari django lagi dan membuat sebuah fungsi untuk logout didalam `main/view.py` sebagai berikut:
 ```python
@@ -673,7 +674,7 @@ from main.views import logout_user
 #Add to urlpatterns
 path('logout/', logout_user, name='logout'),
 ```
-
+<br>
 ## Restricting Access to only logged in user
 Didalam `main/views.py` import berikut dan pastikan ditaruh sebelum kode yang akan menampilkan halaman yang hanya bisa diakses oleh logged in user contoh:
 ```python
@@ -686,7 +687,7 @@ def somerandomfunction(request):
 ...
 
 ```
-
+<br>
 ## Making use of Cookies
 Kita bisa mengguankan data dari cookies untuk misalnya membuat sebuah data yang menampilkan fitur last login.
 Pertama kita masukan `import datetime` kedalam `main/views.py` dan pada fungsi `login_user` kita akan ubah menjadi sebagai berikut:
@@ -721,7 +722,7 @@ Terakhir untuk menampilkan datanya kita bisa edit `main/templates/main.html` dan
 ```html
 <h5>Sesi terakhir login: {{ last_login }}</h5>
 ```
-
+<br>
 ## Making each User have have their own product
 Untuk melakukan ini kita harus masuk ke dalam `main/models.py` dan edit `models.py` dengan menambahkan sebuah import dan tambah data user. Contoh:
 ```python
@@ -760,8 +761,33 @@ def create_product(request):
 ```
 
 > Make sure to always run `python manage.py makemigrations` and `python manage.py migrate` to save changes to the model
+<br>
+##  Django UserCreationForm Pros and Cons
+Django `UserCreationForm` adalah sebuah _class_ form yang termasuk kedalam sistem autentikasi Django yang digunakan untuk mebuat sebuah user account baru.<br>
+**Pros:**
++ UserCreationForm Django dibangun ke dalam sistem otentikasi Django, yang berarti Anda tidak perlu menulis formulir dan kode validasi Anda sendiri untuk membuat pengguna baru. Ini dapat menghemat banyak waktu dan upaya.
++ UserCreationForm Django menyertakan fitur keamanan bawaan. Sebagai contoh, secara otomatis meng-hash kata sandi pengguna, yang melindunginya agar tidak disimpan dalam teks biasa. Ini juga menyediakan validasi untuk bidang nama pengguna dan kata sandi, membantu mencegah kesalahan keamanan yang umum terjadi pada data-flair.training.
++ UserCreationForm Django mudah digunakan, baik untuk pengembang maupun pengguna. Bagi para pengembang, ini menyediakan API yang sederhana dan mudah. Bagi pengguna, ini menyediakan formulir yang jelas dan mudah digunakan untuk membuat akun baru dzone.com.
 
-## Apa itu Django UserCreationForm, dan jelaskan apa kelebihan dan kekurangannya?
-## perbedaan antara autentikasi dan otorisasi dalam konteks Django, dan mengapa keduanya penting?
-## Apa itu cookies dalam konteks aplikasi web, dan bagaimana Django menggunakan cookies untuk mengelola data sesi pengguna?
-## penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai?
+**Cons**
++ UserCreationForm Django didesain untuk menangani kasus penggunaan yang paling umum untuk membuat akun pengguna baru. Jika Anda perlu mengumpulkan informasi tambahan dari pengguna (seperti alamat email, nama lengkap, dan lain-lain), Anda perlu memperluas UserCreationForm atau membuat formulir sendiri. Hal ini dapat menambah kerumitan pada kode Anda.
++ UserCreationForm Django merupakan bagian dari sistem autentikasi Django, yang berarti bergantung pada bagian lain dari sistem tersebut. Jika Anda ingin menggunakan sistem autentikasi yang berbeda, atau jika Anda ingin menyesuaikan sistem autentikasi Django dengan cara yang tidak didukung oleh UserCreationForm, Anda mungkin akan mengalami kesulitan.
+<br>
+## Diffrence between authentication and authorization in Django
++  Authentication di Django adalah proses verifikasi identitas `user`. Ini mengonfirmasi bahwa `user` adalah orang yang mereka klaim. Hal ini biasanya dilakukan melalui nama pengguna dan kata sandi, tetapi sistem otentikasi Django fleksibel dan memungkinkan metode lain juga
++ Authorization di Django, menentukan apa yang boleh dilakukan oleh `authenticated user`.Ini melibatkan izin yang mengindikasikan operasi apa (seperti melihat, menambah, mengubah, atau menghapus) yang dapat dilakukan pengguna pada objek tertentu
+<br>
+## Web Cookies and How Django uses them
+**Cookies** dalam sebuah aplikasi web merupakan data kecil yang disimpan oleh browser anda dan dikirim dengan setiap `HTTP Request`. **Cookies** digunakan untuk mengingat informasi tentang user seperti preferences, authentication status, dan session-related data
+
+Django menggunakan cookie untuk mengelola sesi data pengguna. *Session framework* memungkinkan Anda untuk menyimpan dan mengambil data sewenang-wenang pada basis per-pengunjung situs. Secara default, Django menggunakan **session cookies** untuk menyimpan data sesi, yang berarti bahwa data aktual disimpan di sisi server, sedangkan cookie sisi klien berisi ID sesi untuk identifikasi.
+>To set and get cookies in Django, you can use the set_cookie and get methods on the request and response objects
+<br>
+## Cookies Safe?
+Cookie pada umumnya aman digunakan dalam pengembangan web, namun memiliki potensi risiko keamanan dan privasi. Berikut ini beberapa hal yang perlu diperhatikan saat menggunakan cookie resources:
+
++ Sensitive Information: Cookie tidak boleh digunakan untuk menyimpan informasi sensitif, seperti kata sandi atau nomor kartu kredit. Jika penyerang berhasil mencuri cookie, mereka dapat memperoleh akses ke informasi sensitif yang ada di dalamnya resources.
++ Secure Flag: Jika situs web Anda menggunakan HTTPS (which it should), pastikan cookie memiliki Secure Flag yang ditetapkan. Hal ini memastikan bahwa cookie hanya akan dikirim melalui koneksi terenkripsi, sehingga mengurangi risiko penyadapan oleh *third party*.
++ HttpOnly Flag: Menetapkan bendera HttpOnly pada cookie akan mencegah skrip sisi klien mengakses cookie. Hal ini dapat membantu mencegah serangan seperti Cross-Site Scripting (XSS), di mana penyerang dapat mencoba mengakses cookie melalui JavaScript.
++ SameSite Attribute: Atribut ini dapat membantu melindungi dari serangan **Cross-Site Request Forgery (CSRF)**. Atribut ini memungkinkan Anda untuk menyatakan bahwa cookie tidak boleh dikirim bersama dengan cross-site requests. Hal ini membantu mencegah penyerang mengelabui peramban pengguna untuk membuat permintaan ke situs web.
++ Expiration: Perhatikan waktu expiration cookie Anda. Memiliki waktu expiration yang lebih pendek dapat mengurangi risiko penyerang menggunakan cookie lama untuk mendapatkan akses pengembang.
