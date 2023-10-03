@@ -795,3 +795,233 @@ Cookie pada umumnya aman digunakan dalam pengembangan web, namun memiliki potens
 + HttpOnly Flag: Menetapkan bendera HttpOnly pada cookie akan mencegah skrip sisi klien mengakses cookie. Hal ini dapat membantu mencegah serangan seperti Cross-Site Scripting (XSS), di mana penyerang dapat mencoba mengakses cookie melalui JavaScript.
 + SameSite Attribute: Atribut ini dapat membantu melindungi dari serangan **Cross-Site Request Forgery (CSRF)**. Atribut ini memungkinkan Anda untuk menyatakan bahwa cookie tidak boleh dikirim bersama dengan cross-site requests. Hal ini membantu mencegah penyerang mengelabui peramban pengguna untuk membuat permintaan ke situs web.
 + Expiration: Perhatikan waktu expiration cookie Anda. Memiliki waktu expiration yang lebih pendek dapat mengurangi risiko penyerang menggunakan cookie lama untuk mendapatkan akses pengembang.
+
+
+# Tugas 04
+## Styling the App
+>In the app, I use a mixture of inline and external stylesheet
+### 1)Adding External Styling Sheet
+[Source](https://www.erprealm.com/codebase/getdata/add-external-css-file-to-django-template/)
+<br>Intinya buat sebuah static folder dan sebuah file bernama `style.css` dalam folder applikasimu dan pastikan ada `{% load static %}` didalam file html serta sebuah link contohnya:
+```html
+    <!-- Link for boostrapCSS and script of javascript -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+J4jsl5c9zdLKaUk5Ae5f5b1bw6AUn5f5v8FZJoMxm6f5cH1" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tulpen+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+```
+
+Di dalam `style.css` bisa buat selector untuk styling.
+
+### 2)Default Body Styling
+Inside `base.html` that is the templates for other pages:
+```html
+<body class="please">
+        {% block content %}
+        {% endblock content %}
+    </body>
+```
+Inside `style.css`:
+```css
+.please {
+    background: #333;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: #c4c4c4;
+  }
+```
+
+### 3)Specific Styling(Ex: Login)
+
+
+The css selectors used to style `login.html`:
+```css
+ .form-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+  }
+
+.login-font {
+    font-family: 'Tulpen One',cursive;
+    font-size: 120px;
+    color:crimson;
+    text-align: center;
+}
+
+.login-input{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 100%;
+    color: #c4c4c4;
+    justify-content: center;
+    width: 100%;
+}
+.fill-button {
+    background-color: #333;
+    color: #c4c4c4;
+    border: none;
+    border-radius: 5px;
+    display: block;
+    width: 100%;
+    height: 40px;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+  }
+  
+  .fill-button:hover {
+    background-color:crimson;
+  }
+  
+```
+
+Putting those selectors in the HTML:
+```html
+{% block content %}
+
+<div class="form-center">
+    <div>
+    <h1 class="login-font">COVENANT</h1>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <table class="login-input">
+            <tr>
+                <td>Username: </td>
+            </tr>
+            <tr>
+                <td><input type="text" name="username" placeholder="Username" class="form-control"></td>
+            </tr>
+            <tr>
+                <td>Password: </td>
+            </tr>     
+            <tr>
+                <td><input type="password" name="password" placeholder="Password" class="form-control"></td>
+            </tr>
+        </table>
+        <input class="fill-button" type="submit" value="Enter Covenant">
+    </form>
+
+    {% if messages %}
+        <ul style="font-size: 10px;">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>   
+    {% endif %}     
+    <div style="margin-top: 30px; text-align: center;">
+    Want exlusive gems when trading bodies?<br>
+     <a href="{% url 'main:register' %}">Start a bloodpact now!!!</a>
+    </div>
+    </div>
+</div>
+
+{% endblock content %}
+```
+
+### 4) Decorating Main
+I attempted to make a card system by making use of the `{% for item in products %}` by having a container for it we can make a item amount of cards inside the container example:
+```html
+<div class="card-deck">
+        {% for item in products %}
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ item.name }}</h5>
+              <p class="card-text">Species: {{ item.species }}</p>
+              <p class="card-text">Amount: {{ item.amount }}</p>
+              <p class="card-text">Cause of Death: {{item.causeOfDeath}}</p>
+              <p class="card-text">spiritStatus: {{item.spiritStatus}}</p>
+              <p class="card-text">Description: {{item.description}}</p>
+              <p class="card-text">Last Seen: {{item.date_added}}</p>
+            </div>
+          </div>
+```
+
+You can then stylize the class as you wish
+
+### 5)Making an Edit Button
+Open `main/views.py` and make a function that edit the values of the items:
+```python
+def edit_product(request, id):
+    # Get product berdasarkan ID
+    product = Item.objects.get(pk = id)
+
+    # Set product sebagai instance dari form
+    form = ProductForm(request.POST or None, instance=product)
+
+    if form.is_valid() and request.method == "POST":
+        # Simpan form dan kembali ke halaman awal
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_product.html", context)
+```
+
+Then make a page for editing said item by making a html file for it:
+```html
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<h1>Edit Product</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" value="Edit Product"/>
+            </td>
+        </tr>
+    </table>
+</form>
+
+{% endblock %}
+```
+
+As always connect  it to your `main/urls.py` by putting `from main.views import edit_product` and adding the path url `path('edit-product/<int:id>', edit_product, name='edit_product'),` into the urlpatterns.
+
+Lastly make a button of sorts in `main.html`, for example:
+```html
+<a style="text-decoration: none;" href="{% url 'main:edit_product' item.pk %}">
+    <button class="card-buttons">
+    Button
+    </button>
+</a>
+```
+
+### 6)Delete Item Button
+First make a `delete_product` function like so:
+```python
+def delete_product(request,id):
+    if request.method == "POST":
+        tempItem=Item.objects.get(pk=id)
+        tempItem.delete()
+    return HttpResponseRedirect(reverse('main:show_main'))
+```
+And of course connect it in `urls.py` by putting:
+```python
+#Add this import 
+from main.views import delete_product
+
+#Add this path into urls pattern
+path('deleteProduct/<int:id>/',delete_product,name='delete_product'),
+```
+Lastly put a button in the `main.html`, ex:
+```html
+<form method="post" action="{% url 'main:delete_product' item.id %}">
+    {% csrf_token %}
+    <button class="card-buttons" type="submit">⨻</button>
+</form>
+```
+
+##  Jelaskan manfaat dari setiap element selector dan kapan waktu yang tepat untuk menggunakannya.
+## Jelaskan HTML5 Tag yang kamu ketahui.
+## Jelaskan perbedaan antara margin dan padding.
+## Jelaskan perbedaan antara framework CSS Tailwind dan Bootstrap. Kapan sebaiknya kita menggunakan Bootstrap daripada Tailwind, dan sebaliknya?
