@@ -761,6 +761,11 @@ def create_product(request):
 
 > Make sure to always run `python manage.py makemigrations` and `python manage.py migrate` to save changes to the model
 
+### Example:
+![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/98a9527f-77f2-4513-848f-751dbd1ed985)
+![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/cb2d8fa4-7174-4110-8c0a-7df36159a692)
+
+
 ##  Django UserCreationForm Pros and Cons
 Django `UserCreationForm` adalah sebuah _class_ form yang termasuk kedalam sistem autentikasi Django yang digunakan untuk mebuat sebuah user account baru.<br>
 **Pros:**
