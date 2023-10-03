@@ -6,40 +6,41 @@
 
 {% block content %}
 
-<div class = "login">
-
-    <h1>Login</h1>
+<div class="form-center">
+    <div>
+    <h1 class="login-font">COVENANT</h1>
 
     <form method="POST" action="">
         {% csrf_token %}
-        <table>
+        <table class="login-input">
             <tr>
                 <td>Username: </td>
+            </tr>
+            <tr>
                 <td><input type="text" name="username" placeholder="Username" class="form-control"></td>
             </tr>
-                    
             <tr>
                 <td>Password: </td>
+            </tr>     
+            <tr>
                 <td><input type="password" name="password" placeholder="Password" class="form-control"></td>
             </tr>
-
-            <tr>
-                <td></td>
-                <td><input class="btn login_btn" type="submit" value="Enter Covenant"></td>
-            </tr>
         </table>
+        <input class="fill-button" type="submit" value="Enter Covenant">
     </form>
 
     {% if messages %}
-        <ul>
+        <ul style="font-size: 10px;">
             {% for message in messages %}
                 <li>{{ message }}</li>
             {% endfor %}
-        </ul>
+        </ul>   
     {% endif %}     
-        
-    Want exlusive gems when trading bodies? <a href="{% url 'main:register' %}">Start a bloodpact now!!!</a>
-
+    <div style="margin-top: 30px; text-align: center;">
+    Want exlusive gems when trading bodies?<br>
+     <a href="{% url 'main:register' %}">Start a bloodpact now!!!</a>
+    </div>
+    </div>
 </div>
 
 {% endblock content %}

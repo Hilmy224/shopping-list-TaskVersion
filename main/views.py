@@ -91,6 +91,21 @@ def create_product(request):
     context = {'form': form}
     return render(request, "create_product.html", context)
 
+def edit_product(request, id):
+    # Get product berdasarkan ID
+    product = Item.objects.get(pk = id)
+
+    # Set product sebagai instance dari form
+    form = ProductForm(request.POST or None, instance=product)
+
+    if form.is_valid() and request.method == "POST":
+        # Simpan form dan kembali ke halaman awal
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_product.html", context)
+
 
 #Create a variable to store all the data and return them in xml format(using serialiizer)
 def show_xml(request):

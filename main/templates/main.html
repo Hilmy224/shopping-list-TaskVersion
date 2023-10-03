@@ -2,62 +2,58 @@
 
 
 {% block content %}
-    <h1>Corpse Corp</h1>
+    <h1 class="login-font">Corpse Corp</h1>
 
-    <h5>Customer: </h5>
-    <p>{{ name }}</p> <!-- Ubahlah sesuai dengan nama kamu -->
-    <h5>Class: </h5>
-    <p>{{ class }}</p> <!-- Ubahlah sesuai dengan kelas kamu -->
-
-
-    <tb> {{ itemCount }} Bodies Grafted </tb>
     <table>
         <tr>
-            <th>Name</th>
-            <th>Species</th>
-            <th>Amount</th>
-            <th></th>
-            <th></th>
-            <th>CauseOfDeath</th>
-            <th>SpiritStatus</th>
-            <th>Description</th>
-            <th>Date Added</th>
+            <td>Customer:</td>
+            <td>{{ name }}</td>
         </tr>
-    
-        {% comment %} Below is how to show the product data {% endcomment %}
-    
-        {% for item in products %}
-            <tr>
-                <td style="text-align: center;">{{item.name}}</td>
-                <td style="text-align: center;">{{item.species}}</td>
-                <td style="text-align: center;">{{item.amount}}</td>
-                <td>
-                    <form method="post" action="{% url 'main:add_amount' item.id %}">
-                        {% csrf_token %}
-                        <button type="submit">⨹</button>
-                    </form>
-                </td>
-                <td>
-                    <form method="post" action="{% url 'main:lessen_amount' item.id %}">
-                        {% csrf_token %}
-                        <button type="submit">⨺</button>
-                    </form>
-                </td>
-                <td style="text-align: center;">{{item.causeOfDeath}}</td>
-                <td style="text-align: center;">{{item.spiritStatus}}</td>
-                <td style="text-align: center;">{{item.description}}</td>
-                <td style="text-align: center;">{{item.date_added}}</td>
-                <td>
-                    <form method="post" action="{% url 'main:delete_product' item.id %}">
-                        {% csrf_token %}
-                        <button type="submit">⨻</button>
-                    </form>
-                </td>
-
-            </tr>
-
-        {% endfor %}
+        <tr>
+            <td>Class: </td>
+            <td>{{ class }}</td>
+        </tr>
     </table>
+    <tb> {{ itemCount }} Bodies Grafted </tb>
+
+    <div class="card-deck">
+        {% for item in products %}
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ item.name }}</h5>
+              <p class="card-text">Species: {{ item.species }}</p>
+              <p class="card-text">Amount: {{ item.amount }}</p>
+              <p class="card-text">Cause of Death: {{item.causeOfDeath}}</p>
+              <p class="card-text">spiritStatus: {{item.spiritStatus}}</p>
+              <p class="card-text">Description: {{item.description}}</p>
+              <p class="card-text">Last Seen: {{item.date_added}}</p>
+              <div style="display: flex;">
+                <form method="post" action="{% url 'main:add_amount' item.id %}">
+                    {% csrf_token %}
+                    <button class="card-buttons" type="submit">⨹</button>
+                </form>
+              <form method="post" action="{% url 'main:delete_product' item.id %}">
+                {% csrf_token %}
+                <button class="card-buttons" type="submit">⨻</button>
+            </form>
+            <form method="post" action="{% url 'main:lessen_amount' item.id %}">
+                {% csrf_token %}
+                <button class="card-buttons" type="submit">⨺</button>
+            </form>
+                <a style="text-decoration: none;" href="{% url 'main:edit_product' item.pk %}">
+                    <button class="card-buttons">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                          </svg>
+                    </button>
+                </a>
+                </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    
     
     <br />
     
