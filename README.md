@@ -797,7 +797,7 @@ Cookie pada umumnya aman digunakan dalam pengembangan web, namun memiliki potens
 + Expiration: Perhatikan waktu expiration cookie Anda. Memiliki waktu expiration yang lebih pendek dapat mengurangi risiko penyerang menggunakan cookie lama untuk mendapatkan akses pengembang.
 
 
-# Tugas 04
+# Tugas 05
 ## Styling the App
 >In the app, I use a mixture of inline and external stylesheet
 ### 1)Adding External Styling Sheet
@@ -1021,7 +1021,90 @@ Lastly put a button in the `main.html`, ex:
 </form>
 ```
 
-##  Jelaskan manfaat dari setiap element selector dan kapan waktu yang tepat untuk menggunakannya.
-## Jelaskan HTML5 Tag yang kamu ketahui.
-## Jelaskan perbedaan antara margin dan padding.
+##  CSS Element Selectors
+Element selectors dalam CSS digunakan untuk target dan menerapkan style pada elemen HTML tertentu berdasarkan nama tag mereka. Mereka adalah bagian fundamental dari CSS dan memainkan peran penting dalam penataan web. Jenis-jenis selector elemen:
+
+### Type Selector (Element Selector):
+- Berguna saat Anda ingin menerapkan gaya pada semua elemen dari jenis tertentu. Misalnya, menambahkan gaya kepada semua tag `<h1>` untuk memiliki warna teks biru.
+- Syntax: `elementname { styles }`
+- Ex:` h1 { warna: biru; }`
+
+
+### Class Selector (.classname):
+- Berguna ketika Anda ingin menerapkan gaya pada satu atau lebih elemen yang memiliki atribut kelas yang sama. Kelas dapat digunakan pada beberapa elemen.
+- Syntax: `.classname { styles }`
+- Ex:` .tombol { warna-latar-belakang: hijau; }`
+
+
+### ID Selector (#idname):
+-Berguna untuk memberikan gaya pada elemen yang unik pada halaman. ID harus unik dalam dokumen HTML, sehingga selector ini cocok untuk elemen tunggal dan spesifik.
+- Syntax: `element1 + element2 { styles }`
+- Ex: `#header { ukuran-font: 24px; }`
+
+
+
+### Universal Selector (*):
+- Berguna untuk mereset atau menerapkan gaya default pada semua elemen di halaman. Harap berhati-hati saat menggunakannya agar tidak menimbulkan dampak yang tidak diinginkan.
+- Syntax:  `* { styles }`
+- Ex: `* { margin: 0; padding: 0; }`
+
+
+### Descendant Selector (whitespace):
+- Berguna untuk menargetkan elemen yang merupakan keturunan dari leluhur tertentu. Misalnya, menata elemenelemen `<ul>` dalam sebuah elemen `<nav>`.
+- Syntax: `ancestor descendant { styles }`
+- Ex: `nav ul { list-style-type: none; }`
+
+
+### Child Selector (>):
+- Berguna untuk memberikan gaya pada elemen yang merupakan anak langsung dari elemen induk. Ini memastikan bahwa gaya tidak diterapkan pada elemen bersarang.
+- Syntax: `parent > child { styles }`
+- Ex: `ul > li { font-weight: bold; }`
+
+
+### Adjacent Sibling Selector (+):
+- Berguna untuk menargetkan elemen yang langsung mengikuti elemen lain secara spesifik. Berguna untuk memberikan gaya pada elemen-elemen yang berdekatan dalam struktur HTML.
+- Syntax: `element1 + element2 { styles }`
+- Ex: `elemen1 + elemen2 { margin-atas: 10px; }`
+
+
+### General Sibling Selector (~):
+- Berguna untuk memberikan gaya pada elemen-elemen yang menjadi saudara dari elemen tertentu, meskipun tidak selalu berdekatan. Ini memilih semua saudara yang sesuai.
+- Syntax: element1 ~ element2 { styles }
+- Ex: `elemen1 ~ elemen2 { gaya-miring: miring; }`
+
+
+## Some HTML5 new Tags
+- Tag `<article>`: Tag <article> adalah salah satu elemen pengelompokan baru dalam HTML5. Tag HTML `<article>` digunakan untuk mewakili sebuah artikel. Lebih spesifik lagi, konten dalam tag <article> bersifat independen dari konten lain di situs (meskipun bisa terkait).
+- Tag `<aside>`: Tag `<aside>` digunakan untuk menjelaskan objek utama halaman web secara singkat seperti sebuah sorotan. Pada dasarnya, ini mengidentifikasi konten yang terkait dengan konten utama halaman web tetapi bukan merupakan inti utama dari halaman tersebut. Tag `<aside>` berisi informasi penulis, tautan, konten terkait, dan sebagainya.
+- Tag `<audio>`: Tag `<audio>` digunakan untuk menyisipkan audio ke dalam halaman web HTML.
+- Tag `<video>`: Tag `<video>` digunakan untuk menyematkan konten video dalam dokumen, seperti klip film atau aliran video lainnya.
+- Tag `<section>`: Tag `<section>` mendefinisikan bagian dari dokumen seperti bab, header, footer, atau bagian dokumen lainnya. Tag section membagi konten menjadi bagian-bagian dan subbagian. Tag section digunakan ketika diperlukan dua header atau footer atau bagian dokumen lainnya. Tag <section> mengelompokkan blok generik konten terkait. Keuntamaan utama dari tag section adalah bahwa itu adalah elemen semantik, yang menjelaskan maknanya kepada browser dan pengembang.
+- Tag `<time>`: Tag `<time>` digunakan untuk menampilkan tanggal/waktu yang dapat dibaca manusia. Ini juga dapat digunakan untuk mengkodekan tanggal dan waktu dalam bentuk yang dapat dibaca mesin. Keuntungan utama bagi pengguna adalah bahwa mereka dapat menawarkan untuk menambahkan pengingat ulang tahun atau acara yang dijadwalkan dalam kalender mereka dan mesin pencari dapat menghasilkan hasil pencarian yang lebih cerdas.
+- Tag `<wbr>`: Tag `<wbr>` dalam HTML singkatan dari kesempatan pemutus kata dan digunakan untuk menentukan posisi dalam teks yang diperlakukan sebagai pemutus baris oleh browser. Ini sebagian besar digunakan ketika kata yang digunakan terlalu panjang dan ada kemungkinan bahwa browser dapat memecah baris di tempat yang salah untuk memasukkan teks.
+- Tag `<embed>`: Tag <embed> dalam HTML digunakan untuk menyematkan aplikasi eksternal yang umumnya berisi konten multimedia seperti audio atau video ke dalam dokumen HTML. Ini digunakan sebagai wadah untuk menyematkan plug-in seperti animasi flash. Tag ini adalah tag baru dalam HTML 5, dan hanya memerlukan tag pembuka.
+
+
+[Source](https://www.geeksforgeeks.org/html5-new-tags/)
+
+## Diffrence between Margin and Padding
+Di dalam CSS, margin dan padding adalah dua properti yang digunakan untuk mengendalikan ruang di sekitar dan di dalam elemen HTML.
+
+- Margin adalah ruang kosong di sekitar elemen HTML. Ini adalah jarak antara elemen dan elemen lainnya atau tepi browser. Margin dapat digunakan untuk menambahkan ruang kosong di sekitar elemen HTML atau untuk mengubah posisi elemen relatif terhadap elemen lainnya.
+- Padding adalah ruang kosong di dalam elemen HTML. Ini adalah jarak antara tepi elemen dan kontennya. Padding digunakan untuk menambahkan ruang kosong di sekitar konten elemen HTML atau untuk memperbesar atau memperkecil elemen itu sendiri.
+
+![image](https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/7794d21f-e7be-4418-9d1d-5119489a472a)
+> - Content: isi dari box (tempat terlihatnya teks dan gambar)
+> - Padding: mengosongkan area di sekitar konten (transparan)
+> - Border: garis tepian yang membungkus konten dan padding-nya
+>- Margin: mengosongkan area di sekitar border (transparan)
+
 ## Jelaskan perbedaan antara framework CSS Tailwind dan Bootstrap. Kapan sebaiknya kita menggunakan Bootstrap daripada Tailwind, dan sebaliknya?
+- Bootstrap adalah kerangka kerja HTML, CSS, dan JavaScript yang paling populer untuk membangun proyek yang responsif dan mobile-first. Bootstrap menawarkan kelas-kelas yang telah ditentukan sebelumnya yang berkaitan dengan gaya-gaya tertentu, yang dapat diterapkan pada elemen HTML untuk penataan otomatis. Ini menciptakan desain yang konsisten tetapi dapat membatasi kebebasan kreatif.
+
+> Bootstrap menggunakan Sass yang merupakan preprocessor CSS populer. Ini memungkinkan Anda menggunakan fungsi dan variabel dalam stylesheet. Bootstrap memerlukan empat file dalam proyek Anda untuk mendapatkan manfaat penuh dari penggunaan Bootstrap
+
+- Tailwind CSS di sisi lain, adalah kerangka kerja CSS utility-first yang paling populer untuk pengembangan UI yang cepat. Tailwind CSS tidak memiliki tema default atau komponen UI bawaan. Sebaliknya, ia datang dengan widget yang telah didesain sebelumnya yang dapat Anda gunakan untuk membangun situs Anda dari awal.
+
+> Tailwind CSS menggunakan post-CSS dan file konfigurasi untuk mengatur variabel dan konfigurasi dari stylesheet. Ini berarti bahwa Anda dapat menambahkan, memperbarui, atau menghapus font, warna, spasi, atau apa pun yang dapat Anda pikirkan.
+
+- Perbedaan utama antara Tailwind CSS dan Bootstrap adalah bahwa Tailwind CSS lebih fleksibel dan dapat disesuaikan, sementara Bootstrap lebih dikendalikan dan menghasilkan desain yang lebih konsisten. Bootstrap dikenal karena responsifnya, sedangkan para pendukung Tailwind CSS biasanya menghargai fleksibilitas dan dapat disesuaikan dari kerangka kerja tersebut.
