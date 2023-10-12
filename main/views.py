@@ -21,6 +21,9 @@ from django.contrib.auth.decorators import login_required
 #Imports for adding the cookies
 import datetime
 
+#For implementing AJAX
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseNotFound
 
 @login_required(login_url='/login')
 
@@ -149,3 +152,38 @@ def delete_product(request,id):
         tempItem=Item.objects.get(pk=id)
         tempItem.delete()
     return HttpResponseRedirect(reverse('main:show_main'))
+
+
+@csrf_exempt
+def add_product_ajax(request):
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        species = request.POST.get("species")
+        amount = request.POST.get("amount")
+        spiritStatus=request.POST.get("spiritStatus")
+        causeOfDeath=request.POST.get("causeOfDeath")
+        description = request.POST.get("description")
+        user = request.user
+
+        new_product = Item(user=user,name=name,species=species,amount=amount,spiritStatus=spiritStatus,causeOfDeath=causeOfDeath,description=description)
+        new_product.save()
+
+        return HttpResponse(b"CREATED", status=201)
+
+    return HttpResponseNotFound()
+
+@csrf_exempt
+def delete_item_ajax(request,id):
+    if request.method=='DELETE':
+        Item.objects.get(pk=id).delete()
+        return HttpResponse(b"DELETED",status=201)
+    return HttpResponseNotFound
+
+
+def get_product_json(request):
+    product_item = Item.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize('json', product_item))
+
+
+
+

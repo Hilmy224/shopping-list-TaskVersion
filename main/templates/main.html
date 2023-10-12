@@ -14,59 +14,143 @@
             <td>{{ class }}</td>
         </tr>
     </table>
+    
     <tb> {{ itemCount }} Bodies Grafted </tb>
 
-    <div class="card-deck">
-        {% for item in products %}
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">{{ item.name }}</h5>
-              <p class="card-text">Species: {{ item.species }}</p>
-              <p class="card-text">Amount: {{ item.amount }}</p>
-              <p class="card-text">Cause of Death: {{item.causeOfDeath}}</p>
-              <p class="card-text">spiritStatus: {{item.spiritStatus}}</p>
-              <p class="card-text">Description: {{item.description}}</p>
-              <p class="card-text">Last Seen: {{item.date_added}}</p>
-              <div style="display: flex;">
-                <form method="post" action="{% url 'main:add_amount' item.id %}">
-                    {% csrf_token %}
-                    <button class="card-buttons" type="submit">⨹</button>
-                </form>
-              <form method="post" action="{% url 'main:delete_product' item.id %}">
-                {% csrf_token %}
-                <button class="card-buttons" type="submit">⨻</button>
-            </form>
-            <form method="post" action="{% url 'main:lessen_amount' item.id %}">
-                {% csrf_token %}
-                <button class="card-buttons" type="submit">⨺</button>
-            </form>
-                <a style="text-decoration: none;" href="{% url 'main:edit_product' item.pk %}">
-                    <button class="card-buttons">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                          </svg>
-                    </button>
-                </a>
+    <div>
+        <div class="card-deck" id="item_list">
+        </div>
+    </div>
+    
+      
+      
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Product</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form" onsubmit="return false;">
+                        
+                        <div class="mb-3">
+                            <label for="name" class="col-form-label">Name:</label>
+                            <input type="text" class="form-control" id="name" name="name"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="species" class="col-form-label">Species:</label>
+                            <input type="text" class="form-control" id="species" name="species"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="spiritStatus" class="col-form-label">Spirit Status:</label>
+                            <input type="text" class="form-control" id="spiritStatus" name="spiritStatus"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="causeOfDeath" class="col-form-label">Cause Of Death:</label>
+                            <input type="text" class="form-control" id="causeOfDeath" name="causeOfDeath"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="amount" class="col-form-label">Amount:</label>
+                            <input type="number" class="form-control" id="amount" name="amount"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="col-form-label">Description:</label>
+                            <textarea class="form-control" id="description" name="description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Product</button>
                 </div>
             </div>
-          </div>
-        {% endfor %}
-      </div>
-    
+        </div>
+        </div>
     
     <br />
     
-    <a href="{% url 'main:create_product' %}">
+    <a style="text-decoration: none;" href="{% url 'main:create_product' %}">
         <button>
             Add Bodies
         </button>
     </a>
-    <a href="{% url 'main:logout' %}">
+    <a style="text-decoration: none;" href="{% url 'main:logout' %}">
         <button>
             Exit Covenant
         </button>
     </a>
 
+    
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Product by AJAX</button>
+
+
     <h5>Last blood pact session: {{ last_login }}</h5>
+
+    <script>
+        async function deleteItem(id){
+            let url="{% url 'main:delete_product_ajax' '12345' %}";
+            url=url.replace('12345',id);
+            const response =await fetch(url,{
+                method: "DELETE",
+            });
+            if(response.ok){
+                refreshProducts();
+            }
+        }
+        async function getProducts() {
+            return fetch("{% url 'main:get_product_json' %}").then((res) => res.json())
+        }
+        async function refreshProducts() {
+            
+        document.getElementById("item_list").innerHTML = ""
+        const products = await getProducts()
+        let htmlString = ``
+        products.forEach((item) => {
+            htmlString += `
+            <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">${item.fields.name}</h5>
+                <p class="card-text">Species: ${item.fields.species}</p>
+                <p class="card-text">Amount: ${item.fields.amount}</p>
+                <p class="card-text">Cause of Death: ${item.fields.causeOfDeath}</p>
+                <p class="card-text">spiritStatus: ${item.fields.spiritStatus}</p>
+                <p class="card-text">Description: ${item.fields.description}</p>
+                <p class="card-text">Last Seen: ${item.fields.date_added}</p>
+
+                <div style="display: flex;">
+                        <button class="card-buttons" type="submit">⨹</button>
+                        <button onclick="deleteItem(${item.pk})" class="card-buttons" type="submit">⨻</button>
+                        <button class="card-buttons" type="submit">⨺</button>
+                        <button class="card-buttons">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                            </svg>
+                        </button>
+                </div>
+            </div>
+            </div>
+        `
+        })
+        
+        document.getElementById("item_list").innerHTML = htmlString
+        }
+
+        refreshProducts()
+
+        function addProduct() {
+        console.log()
+        fetch("{% url 'main:add_product_ajax' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#form'))
+        }).then(refreshProducts)
+
+        document.getElementById("form").reset()
+        return false
+    }
+
+        document.getElementById("button_add").onclick = addProduct;
+    </script>
 {% endblock content %}

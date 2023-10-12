@@ -11,7 +11,7 @@ class Item(models.Model):
     spiritStatus=models.CharField(max_length=255,default="Uknown")
     causeOfDeath=models.CharField(max_length=255,default="Uknown")
     description = models.TextField()
-    date_added = models.DateField(auto_now_add=True)
+    date_added = models.DateField(auto_now_add=True)   
     
    
 
