@@ -1108,3 +1108,260 @@ Di dalam CSS, margin dan padding adalah dua properti yang digunakan untuk mengen
 > Tailwind CSS menggunakan post-CSS dan file konfigurasi untuk mengatur variabel dan konfigurasi dari stylesheet. Ini berarti bahwa Anda dapat menambahkan, memperbarui, atau menghapus font, warna, spasi, atau apa pun yang dapat Anda pikirkan.
 
 - Perbedaan utama antara Tailwind CSS dan Bootstrap adalah bahwa Tailwind CSS lebih fleksibel dan dapat disesuaikan, sementara Bootstrap lebih dikendalikan dan menghasilkan desain yang lebih konsisten. Bootstrap dikenal karena responsifnya, sedangkan para pendukung Tailwind CSS biasanya menghargai fleksibilitas dan dapat disesuaikan dari kerangka kerja tersebut.
+
+
+# Week 06
+## AJAX GET Implementation
+
+Pertama kita buat sebuah fungsi untuk mengambil semua produk/item dari database didalam `main/views.py`, dan connect fungsi tersebut ke `main/urls.py`
+```python
+#Views function
+def get_product_json(request):
+    product_item = Item.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize('json', product_item))
+```
+```python
+#Connect views
+#Import
+from main.views import get_product_json
+
+#Inside the variable urlpatterns
+urlpatterns =[
+path('get-product/', get_product_json, name='get_product_json'), # Add this
+]
+```
+
+Lalu dalam `main/templates/main.html` tambahkan sebuah fungsi asynchronus:
+```html
+
+<script>
+     async function getProducts() {
+            return fetch("{% url 'main:get_product_json' %}").then((res) => res.json())
+        }
+</script>
+```
+## AJAX POST Implementation
+Pertama kita buat sebuah fungsi mebuat sebuah product dengan ajax yang ditambahkan dengann dekarator `@csrf_exempt` 
+> from django.views.decorators.csrf import csrf_exempt
+Contoh sebagai berikut:
+```python
+@csrf_exempt
+def add_product_ajax(request):
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        species = request.POST.get("species")
+        amount = request.POST.get("amount")
+        spiritStatus=request.POST.get("spiritStatus")
+        causeOfDeath=request.POST.get("causeOfDeath")
+        description = request.POST.get("description")
+        user = request.user
+
+        new_product = Item(user=user,name=name,species=species,amount=amount,spiritStatus=spiritStatus,causeOfDeath=causeOfDeath,description=description)
+        new_product.save()
+
+        return HttpResponse(b"CREATED", status=201)
+
+    return HttpResponseNotFound()
+```
+
+Connect fungsi tersebut kedalam `urls.py`
+
+```python
+#Connect views
+#Import
+from main.views import add_product_ajax
+
+#Inside the variable urlpatterns
+urlpatterns =[
+path('create-ajax/', add_product_ajax, name='add_product_ajax'), # Add this
+]
+
+```
+Setelah itu ubah kode sebelum agar tidak menggunakan `{for loop}` agar menjadi sebagai berikut:
+```html
+ <div>
+        <div class="card-deck" id="item_list"> 
+        </div>
+    </div>
+```
+>remember the id="item_list"
+
+Lalu dalam `<script></script>` masukan sebuah fungsi untuk masukan html menggunakan loop :
+```
+async function refreshProducts() {
+            
+        document.getElementById("item_list").innerHTML = ""
+        const products = await getProducts()
+        let htmlString = ``
+        products.forEach((item) => {
+            htmlString += `
+            <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">${item.fields.name}</h5>
+                <p class="card-text">Species: ${item.fields.species}</p>
+                <p class="card-text">Amount: ${item.fields.amount}</p>
+                <p class="card-text">Cause of Death: ${item.fields.causeOfDeath}</p>
+                <p class="card-text">spiritStatus: ${item.fields.spiritStatus}</p>
+                <p class="card-text">Description: ${item.fields.description}</p>
+                <p class="card-text">Last Seen: ${item.fields.date_added}</p>
+
+                <div style="display: flex;">
+                        <button class="card-buttons" type="submit">⨹</button>
+                        <button onclick="deleteItem(${item.pk})" class="card-buttons" type="submit">⨻</button>
+                        <button class="card-buttons" type="submit">⨺</button>
+                        <button class="card-buttons">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                            </svg>
+                        </button>
+                </div>
+            </div>
+            </div>
+        `
+        })
+        
+        document.getElementById("item_list").innerHTML = htmlString
+        }
+
+        refreshProducts()
+```
+> agar bisa keupdate secara asinkron
+
+Dalam implementasi kita buat sebuah form yang akan menambah product secara asinkronus menggunakan metode sebeulm yang udh dibuat, contoh:
+Buat forms menggunakan bootstrap:
+```html
+ <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Product</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form" onsubmit="return false;">
+                        
+                        <div class="mb-3">
+                            <label for="name" class="col-form-label">Name:</label>
+                            <input type="text" class="form-control" id="name" name="name"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="species" class="col-form-label">Species:</label>
+                            <input type="text" class="form-control" id="species" name="species"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="spiritStatus" class="col-form-label">Spirit Status:</label>
+                            <input type="text" class="form-control" id="spiritStatus" name="spiritStatus"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="causeOfDeath" class="col-form-label">Cause Of Death:</label>
+                            <input type="text" class="form-control" id="causeOfDeath" name="causeOfDeath"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="amount" class="col-form-label">Amount:</label>
+                            <input type="number" class="form-control" id="amount" name="amount"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="col-form-label">Description:</label>
+                            <textarea class="form-control" id="description" name="description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Product</button>
+                </div>
+            </div>
+        </div>
+        </div>
+```
+> pastikan di tutorial 5 udh menyertakan semua link(termasuk yang opsional) dan script dalam base.html
+
+Lalu tambahkan sebuah tombol yang akan pop up kode html tersebut:
+```html
+ <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Product by AJAX</button>
+ ```
+Terakhir tambahkan fungsi dalam `<script>` sebagai berikut untuk memangil fungsi dari views:
+```
+...
+function addProduct() {
+        fetch("{% url 'main:add_product_ajax' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#form'))
+        }).then(refreshProducts)
+
+        document.getElementById("form").reset()
+        return false
+    }
+    
+document.getElementById("button_add").onclick = addProduct
+```
+
+## Collect Static
+Jalankan `python manage.py collectstatic`
+
+## Explain the difference between asynchronous programming and synchronous programming
+
+### Synchronous Programming:
++ Synchronous Programming adalah *approach* tradisional di mana tugas dieksekusi secara berurutan, *one by one*
++ Dalam Synchronous Programming, setiap tugas harus menunggu tugas sebelumnya selesai sebelum dapat dimulai. Ini berarti bahwa jika suatu tugas membutuhkan waktu lama untuk diselesaikan, tugas tersebut dapat menghalangi pelaksanaan tugas lain, yang menyebabkan potensi penundaan.
++ Synchronous Programming sangat mudah untuk ditulis dan dipahami, karena kode dieksekusi dengan cara yang dapat diprediksi dan berurutan.
++ Pemrograman ini biasanya digunakan untuk tugas-tugas sederhana dan mudah yang tidak memerlukan terlalu banyak daya pemrosesan.
+
+## Asynchronous Programming:
++ Asynchronous Programming memungkinkan beberapa tugas dieksekusi secara bersamaan, tanpa memblokir *main thread* atau *User Interface* (UI).
++ Dalam Asynchronous Programming, tugas-tugas dimulai dan dieksekusi secara independen, tanpa menunggu satu sama lain selesai.Hal ini memungkinkan penggunaan sumber daya sistem yang lebih efisien dan dapat meningkatkan kinerja secara signifikan, terutama dalam skenario di mana tugas-tugas yang melibatkan menunggu sumber daya eksternal (misalnya, permintaan jaringan, operasi file).
++ Pemrograman asinkron biasanya digunakan dalam pengembangan web untuk menangani operasi yang memakan waktu, seperti mengambil data dari server, melakukan kueri basis data, atau menangani interaksi pengguna tanpa membekukan UI.
++ Dengan menjalankan tugas secara asinkron, aplikasi web dapat tetap responsif dan memberikan pengalaman pengguna yang lebih baik dengan menghindari penundaan dan pemblokiran operasi.
+
+## Event Driven Programming
+Event-driven programming adalah paradigma pemrograman di mana aliran program ditentukan oleh peristiwa seperti user interactions, sensor outputs, atau messages dari programs atau thread lain. Dalam Event-driven programming, program menunggu peristiwa terjadi dan kemudian memicu tindakan atau fungsi yang sesuai untuk menangani peristiwa tersebut. Paradigma ini banyak digunakan dalam JavaScript dan AJAX karena sifatnya yang asinkron, sehingga memungkinkan eksekusi kode yang tidak memblokir dan *User Interface* yang responsif. Contoh dari Assignment:
+
+```html
+<html>
+...
+
+<body>
+    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Product</button>
+</body>
+
+<script>
+ function addProduct() {
+        console.log()
+        fetch("{% url 'main:add_product_ajax' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#form'))
+        }).then(refreshProducts)
+
+        document.getElementById("form").reset()
+        return false
+    }
+
+        document.getElementById("button_add").onclick = addProduct;
+</script>
+</html>
+```
+
+## Fetch API and jQuery
+### Fetch API
+Pros:
++ Fetch API adalah API peramban bawaan, yang berarti tidak memerlukan pustaka atau plugin tambahan untuk menggunakan. 
++ API ini mengembalikan Promises dan oleh karena itu mudah digunakan dengan sintaks asinkronisasi/tunggu JavaScript modern, yang dapat menghasilkan kode asinkron yang lebih bersih dan lebih mudah dibaca di. 
++ Fetch API juga menyediakan serangkaian fitur yang kuat dan fleksibel, seperti kemampuan untuk mengontrol dan memeriksa semua aspek permintaan dan respons developer.
+
+Cons:
++ Fetch API tidak didukung di Internet Explorer, dan membutuhkan polyfill untuk digunakan di browser
++ Secara default, Fetch tidak akan mengirim atau menerima cookie apa pun dari server, yang mengakibatkan permintaan yang tidak diautentikasi jika situs bergantung pada pemeliharaan sesi pengguna 
+
+
+### jQuery
+Pros:
++ jQuery AJAX memiliki kompatibilitas peramban yang luas, termasuk Internet Explorer 6.0 ke atas. Hal ini menjadikannya pilihan yang baik jika Anda perlu mendukung peramban yang lebih tua 
++ jQuery AJAX memiliki sintaks yang lebih sederhana untuk membuat permintaan dasar dan tidak perlu berurusan dengan Promises secara langsung 
++ Secara otomatis mengirimkan cookie dan menangani data JSON, yang bisa lebih nyaman untuk kasus penggunaan sederhana
+
+Cons:
++ jQuery adalah pustaka yang besar, dan jika Anda hanya menggunakannya untuk AJAX, Anda mungkin memuat banyak kode yang tidak perlu. Hal ini dapat memperlambat situs Anda, terutama pada koneksi seluler atau koneksi dengan bandwidth rendah
++ Penggunaan jQuery AJAX yang sukses, error, dan callback lengkap dapat menghasilkan kode yang lebih kompleks dan lebih sulit untuk dibaca daripada menggunakan Promises atau async/await 
+
+Kesimpulannya, Fetch API dan jQuery AJAX sama-sama memiliki kasus penggunaannya. Fetch API mungkin merupakan pilihan yang lebih baik untuk proyek-proyek baru yang tidak perlu mendukung browser yang lebih tua dan ingin memanfaatkan kekuatan dan fleksibilitas Fetch API dengan JavaScript modern. Di sisi lain, jQuery AJAX dapat menjadi pilihan yang baik untuk proyek yang membutuhkan kompatibilitas browser yang luas dan di mana jQuery sudah digunakan untuk hal-hal lain.
