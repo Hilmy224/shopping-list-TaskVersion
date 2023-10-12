@@ -90,8 +90,8 @@
 
     <script>
         async function deleteItem(id){
-            let url="{% url 'main:delete_product_ajax' '12345' %}";
-            url=url.replace('12345',id);
+            let url="{% url 'main:delete_product_ajax' '0' %}";
+            url=url.replace('0',id);
             const response =await fetch(url,{
                 method: "DELETE",
             });
