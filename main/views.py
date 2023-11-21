@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
@@ -24,6 +25,9 @@ import datetime
 #For implementing AJAX
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseNotFound
+
+#Flutter Json Response
+from django.http import JsonResponse
 
 @login_required(login_url='/login')
 
@@ -152,6 +156,28 @@ def delete_product(request,id):
         tempItem=Item.objects.get(pk=id)
         tempItem.delete()
     return HttpResponseRedirect(reverse('main:show_main'))
+
+@csrf_exempt
+def create_product_flutter(request):
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+
+        new_product = Item.objects.create(
+            user = request.user,
+            name = data["name"],
+            species= data['species'],
+            amount = int(data["amount"]),
+            spiritStatus=data["spiritStatus"],
+            causeOfDeath=data["causeOfDeath"],
+            description = data["description"]
+        )
+
+        new_product.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
 
 
 @csrf_exempt
