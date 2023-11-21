@@ -2,7 +2,7 @@
   <img src="https://github.com/Hilmy224/shopping-list-TaskVersion/assets/108089955/211f229c-1df5-4496-b289-316b118656cf" />
 </p>
 
-[Link to the Application](https://corpse-corp.adaptable.app)
+[Link to the Application](http://muhammad-hilmy21-tugas.pbp.cs.ui.ac.id.)
 # Week 01
 ## Setup Django
 ### 1)Set up a directory and use a virtual environment:
