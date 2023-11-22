@@ -205,7 +205,7 @@ def delete_item_ajax(request,id):
         return HttpResponse(b"DELETED",status=201)
     return HttpResponseNotFound
 
-
+@csrf_exempt
 def get_product_json(request):
     product_item = Item.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize('json', product_item))
