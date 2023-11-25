@@ -29,9 +29,10 @@ from django.http import HttpResponseNotFound
 #Flutter Json Response
 from django.http import JsonResponse
 
-@login_required(login_url='/login')
+
 
 # Create your views here.
+@login_required(login_url='/login')
 def show_main(request):
     items = Item.objects.filter(user=request.user)
     tempItemCount=0
